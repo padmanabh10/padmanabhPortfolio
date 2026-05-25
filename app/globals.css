@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: #EBFFE6;
+  --color-bg-alt: #E5F9E0;
+  --color-bg-card: #EBFFE6;
+  --color-surface: #D4E8D0;
+  --color-primary: #006C53;
+  --color-primary-dark: #006A65;
+  --color-text: #0F1F10;
+  --color-text-secondary: #3D4A44;
+  --color-text-muted: rgba(0, 108, 83, 0.6);
+  --color-border: rgba(187, 202, 194, 0.3);
+  --color-border-accent: rgba(187, 202, 194, 0.2);
+  --color-accent-bg: rgba(0, 106, 101, 0.1);
+  --color-tag-bg: #006C53;
+  --color-tag-text: #FFFFFF;
+  --color-hero-grid: rgba(64, 201, 162, 0.125);
+  --font-heading: var(--font-jetbrains);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-blink-cursor {
+  animation: blink-cursor 0.8s step-end infinite;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(0deg, #EBFFE6, #EBFFE6), #FFFFFF;
+  color: #0F1F10;
+  font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
+}
+
+/* Rich-text editor + rendered blog content */
+.prose-tiptap p { margin: 0.75rem 0; }
+.prose-tiptap h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.75rem; text-transform: uppercase; }
+.prose-tiptap h3 { font-size: 1.125rem; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+.prose-tiptap ul { list-style: disc; padding-left: 1.5rem; margin: 0.75rem 0; }
+.prose-tiptap ol { list-style: decimal; padding-left: 1.5rem; margin: 0.75rem 0; }
+.prose-tiptap blockquote { border-left: 3px solid var(--color-primary); padding-left: 1rem; margin: 1rem 0; color: var(--color-text-secondary); }
+.prose-tiptap code { background: var(--color-surface); padding: 0.1rem 0.3rem; border-radius: 2px; }
+.prose-tiptap pre { background: var(--color-surface); padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+.prose-tiptap pre code { background: transparent; padding: 0; }
+.prose-tiptap a { color: var(--color-primary); text-decoration: underline; }
+.prose-tiptap img { max-width: 100%; height: auto; margin: 1rem auto; display: block; }
+
+.blog-content p { margin: 0.75rem 0; }
+.blog-content h2 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 0.75rem; text-transform: uppercase; }
+.blog-content h3 { font-size: 1.25rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+.blog-content ul { list-style: disc; padding-left: 1.5rem; margin: 0.75rem 0; }
+.blog-content ol { list-style: decimal; padding-left: 1.5rem; margin: 0.75rem 0; }
+.blog-content blockquote { border-left: 3px solid var(--color-primary); padding-left: 1rem; margin: 1rem 0; color: var(--color-text-secondary); }
+.blog-content code { background: var(--color-surface); padding: 0.1rem 0.3rem; border-radius: 2px; font-size: 0.85em; }
+.blog-content pre { background: var(--color-surface); padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+.blog-content pre code { background: transparent; padding: 0; }
+.blog-content a { color: var(--color-primary); text-decoration: underline; }
+.blog-content img { max-width: 100%; height: auto; margin: 1.5rem auto; display: block; }
+
+/* Hero grid background */
+.hero-grid-bg {
+  background:
+    linear-gradient(180deg, rgba(64, 201, 162, 0.125) 2.5%, rgba(64, 201, 162, 0) 2.5%),
+    linear-gradient(90deg, rgba(64, 201, 162, 0.125) 2.5%, rgba(64, 201, 162, 0) 2.5%);
+  background-size: 40px 40px;
+}
+
+/* Grayscale overlay for images */
+.img-grayscale {
+  position: relative;
+}
+.img-grayscale::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #EBFFE6;
+  mix-blend-mode: saturation;
+  pointer-events: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #D4E8D0;
+}
+::-webkit-scrollbar-thumb {
+  background: #006C53;
 }
