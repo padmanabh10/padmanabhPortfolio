@@ -59,7 +59,7 @@ router.get("/", publicLimiter, optionalAuth, async (req, res, next) => {
 
 router.get("/:idOrSlug", publicLimiter, async (req, res, next) => {
   try {
-    const { idOrSlug } = req.params;
+    const idOrSlug = req.params.idOrSlug ?? "";
     const isObjectId = /^[a-f\d]{24}$/i.test(idOrSlug);
     const doc = await Blog.findOne(
       isObjectId ? { $or: [{ _id: idOrSlug }, { slug: idOrSlug }] } : { slug: idOrSlug }
