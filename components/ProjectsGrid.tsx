@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/types";
 
 export default function ProjectsGrid({ projects }: { projects: Project[] }) {
@@ -83,9 +84,12 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
                   </span>
                 ))}
               </div>
-              <button className="mt-4 w-full border border-primary text-primary font-mono text-xs font-bold tracking-wider py-2 hover:bg-primary hover:text-white transition-colors">
+              <Link
+                href={`/projects/${project.slug}`}
+                className="mt-4 w-full border border-primary text-primary font-mono text-xs font-bold tracking-wider py-2 hover:bg-primary hover:text-white transition-colors block text-center"
+              >
                 &gt; VIEW PROJECT
-              </button>
+              </Link>
             </div>
           </article>
         ))}
