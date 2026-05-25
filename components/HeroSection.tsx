@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 
 export default function HeroSection() {
-  const stats = [
-    /*{ label: "UPTIME_24/7", value: "99.98%" },*/
-  ];
+  const stats: { label: string; value: string }[] = [];
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const rafRef = useRef<number | null>(null);
