@@ -13,6 +13,7 @@ const schema = z.object({
   CLOUDINARY_API_KEY: z.string().optional().default(""),
   CLOUDINARY_API_SECRET: z.string().optional().default(""),
 
+  RENDER_EXTERNAL_URL: z.string().url().optional(),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
   COOKIE_DOMAIN: z.string().default("localhost"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),

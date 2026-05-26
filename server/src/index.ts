@@ -43,6 +43,15 @@ async function main() {
 
   app.listen(env.PORT, () => {
     console.log(`[server] listening on port:${env.PORT}`);
+
+    if (env.RENDER_EXTERNAL_URL) {
+      const url = `${env.RENDER_EXTERNAL_URL}/api/health`;
+      const INTERVAL = 14 * 60 * 1000;
+      setInterval(() => {
+        fetch(url).catch(() => {});
+      }, INTERVAL);
+      console.log(`[keep-alive] pinging ${url} every 14 min`);
+    }
   });
 }
 
