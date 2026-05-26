@@ -23,7 +23,7 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
 
   return (
     <>
-      <section className="px-8 md:px-24 py-6 flex flex-wrap items-center justify-between gap-4 border-y border-border">
+      <section className="px-4 sm:px-8 md:px-24 py-6 flex flex-wrap items-center justify-between gap-4 border-y border-border">
         <div className="flex gap-2 flex-wrap">
           {filters.map((f) => (
             <button
@@ -44,7 +44,7 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
         </span>
       </section>
 
-      <section className="px-8 md:px-24 pb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="px-4 sm:px-8 md:px-24 pb-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
         {filtered.length === 0 && (
           <p className="font-mono text-xs text-text-muted col-span-full py-12 text-center">
             No projects yet.

@@ -6,6 +6,7 @@ import { requireAuth, optionalAuth } from "../middleware/auth.js";
 import { HttpError } from "../middleware/error.js";
 import { slugify } from "../lib/slug.js";
 import { sanitizeRichText } from "../lib/sanitize.js";
+import { notifySubscribers } from "../lib/email.js";
 
 const router = Router();
 
@@ -83,6 +84,9 @@ router.post("/", requireAuth, async (req, res, next) => {
       slug,
       content: sanitizeRichText(data.content),
     });
+    if (data.published) {
+      notifySubscribers("blog", data.title, data.excerpt, slug);
+    }
     res.status(201).json(serialize(doc.toObject()));
   } catch (err) {
     next(err);
@@ -95,12 +99,16 @@ router.put("/:id", requireAuth, async (req, res, next) => {
     const slug = data.slug?.trim() || slugify(data.title);
     const conflict = await Blog.findOne({ slug, _id: { $ne: req.params.id } }).lean();
     if (conflict) throw new HttpError(409, `Slug "${slug}" already in use`);
+    const prev = await Blog.findById(req.params.id, "published").lean();
     const doc = await Blog.findByIdAndUpdate(
       req.params.id,
       { ...data, slug, content: sanitizeRichText(data.content) },
       { new: true, runValidators: true }
     ).lean();
     if (!doc) throw new HttpError(404, "Blog post not found");
+    if (data.published && prev && !prev.published) {
+      notifySubscribers("blog", data.title, data.excerpt, slug);
+    }
     res.json(serialize(doc));
   } catch (err) {
     next(err);

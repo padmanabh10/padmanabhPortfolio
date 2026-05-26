@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProjectsGrid from "@/components/ProjectsGrid";
 import { getProjects } from "@/lib/api";
+import PageHeader from "@/components/PageHeader";
 
 export const metadata: Metadata = { title: "Projects" };
 
@@ -9,8 +10,8 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <section className="px-8 md:px-24 pt-16 pb-12">
-        <h1 className="font-heading text-6xl md:text-8xl uppercase text-text leading-none">
+      <PageHeader>
+        <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl uppercase text-text leading-none">
           PROJECT
           <br />
           ARCHIVE
@@ -19,7 +20,7 @@ export default async function ProjectsPage() {
           A collection of my engineering projects spanning backend systems,
           infrastructure, and full-stack applications.
         </p>
-      </section>
+      </PageHeader>
 
       <ProjectsGrid projects={projects} />
     </>

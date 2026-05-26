@@ -16,10 +16,14 @@ export default function NewsletterForm() {
     e.preventDefault();
     setStatus({ kind: "sending" });
     try {
-      await api("/api/subscribe", {
+      const res = await api<{ ok: boolean; error?: string }>("/api/subscribe", {
         method: "POST",
         body: JSON.stringify({ email }),
       });
+      if (!res.ok) {
+        setStatus({ kind: "error", message: res.error ?? "Unable to subscribe" });
+        return;
+      }
       setStatus({ kind: "sent" });
       setEmail("");
     } catch (err) {

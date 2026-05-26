@@ -6,6 +6,7 @@ import { requireAuth } from "../middleware/auth.js";
 import { HttpError } from "../middleware/error.js";
 import { slugify } from "../lib/slug.js";
 import { sanitizeRichText } from "../lib/sanitize.js";
+import { notifySubscribers } from "../lib/email.js";
 
 const router = Router();
 
@@ -88,6 +89,7 @@ router.post("/", requireAuth, async (req, res, next) => {
       slug,
       content: sanitizeRichText(data.content),
     });
+    notifySubscribers("project", data.title, data.description, slug);
     res.status(201).json(serialize(doc.toObject()));
   } catch (err) {
     next(err);

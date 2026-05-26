@@ -8,7 +8,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-primary border-t border-border px-8 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono">
+    <footer className="bg-primary border-t border-border px-4 sm:px-8 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono">
       <div className="flex items-center gap-4">
         <Link
           href="/padmanabh-login"

@@ -12,10 +12,10 @@ export default function ProjectsSection({
   if (projects.length === 0) return null;
 
   return (
-    <section className="bg-bg-alt px-8 md:px-24 py-24">
+    <section className="bg-bg-alt px-4 sm:px-8 md:px-24 py-12 sm:py-24">
       {/* Section header */}
-      <div className="flex items-center gap-6 mb-16">
-        <h2 className="font-heading text-5xl uppercase text-primary whitespace-nowrap">
+      <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
+        <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap">
           FEATURED PROJECTS
         </h2>
         <div className="flex-1 h-0.5 bg-primary/30 hidden md:block" />
@@ -29,18 +29,18 @@ export default function ProjectsSection({
       </div>
 
       {/* Bento grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
         {/* Large card — first project */}
         {projects[0] && (
           <Link
             href={`/projects/${projects[0].slug}`}
             className="md:col-span-2 bg-bg-card p-1 group"
           >
-            <div className="bg-bg-card p-8 flex flex-col justify-between h-full min-h-[460px]">
+            <div className="bg-bg-card p-6 sm:p-8 flex flex-col justify-between h-full min-h-[320px] sm:min-h-[460px]">
               <div>
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-heading text-4xl uppercase text-text">
+                    <h3 className="font-heading text-2xl sm:text-4xl uppercase text-text">
                       {projects[0].title}
                     </h3>
                     <p className="font-mono text-sm text-text-secondary mt-2">
@@ -96,9 +96,9 @@ export default function ProjectsSection({
             href={`/projects/${projects[1].slug}`}
             className="bg-bg-card p-1 group"
           >
-            <div className="bg-bg-card p-8 flex flex-col justify-between h-full min-h-[460px]">
+            <div className="bg-bg-card p-6 sm:p-8 flex flex-col justify-between h-full min-h-[320px] sm:min-h-[460px]">
               <div>
-                <h3 className="font-heading text-3xl uppercase text-text">
+                <h3 className="font-heading text-2xl sm:text-3xl uppercase text-text">
                   {projects[1].title}
                 </h3>
                 <p className="font-mono text-sm text-text-secondary mt-3 leading-relaxed">
@@ -140,12 +140,12 @@ export default function ProjectsSection({
         {projects[2] && (
           <Link
             href={`/projects/${projects[2].slug}`}
-            className="md:col-span-3 bg-bg-card p-1 group"
+            className="sm:col-span-2 md:col-span-3 bg-bg-card p-1 group"
           >
-            <div className="bg-bg-card p-8">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
+            <div className="bg-bg-card p-6 sm:p-8">
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 sm:gap-8">
                 <div className="max-w-lg">
-                  <h3 className="font-heading text-4xl uppercase text-text">
+                  <h3 className="font-heading text-2xl sm:text-4xl uppercase text-text">
                     {projects[2].title}
                   </h3>
                   <p className="font-mono text-sm text-text-secondary mt-3 leading-relaxed">

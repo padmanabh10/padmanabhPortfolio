@@ -20,9 +20,9 @@ export default function FormationSpecs({ blogs }: { blogs: BlogPost[] }) {
   if (blogs.length === 0) return null;
 
   return (
-    <section className="px-8 md:px-24 py-24 border-t border-border">
-      <div className="flex items-center gap-6 mb-16">
-        <h2 className="font-heading text-5xl uppercase text-primary whitespace-nowrap">
+    <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
+      <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
+        <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap">
           FEATURED BLOGS
         </h2>
         <div className="flex-1 h-0.5 bg-primary/30 hidden md:block" />
@@ -36,7 +36,7 @@ export default function FormationSpecs({ blogs }: { blogs: BlogPost[] }) {
       </div>
 
       <ul className={`grid grid-cols-1 gap-px bg-border ${
-        blogs.length === 1 ? "md:grid-cols-1" : blogs.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
+        blogs.length === 1 ? "md:grid-cols-1" : blogs.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 md:grid-cols-3"
       }`}>
         {blogs.map((post) => (
           <li key={post._id} className="bg-bg">
@@ -56,7 +56,7 @@ export default function FormationSpecs({ blogs }: { blogs: BlogPost[] }) {
                   />
                 </div>
               )}
-              <div className="flex flex-col flex-1 p-8">
+              <div className="flex flex-col flex-1 p-5 sm:p-8">
                 <div className="flex items-center gap-3 mb-6">
                   {post.tags[0] && (
                     <span className="bg-primary text-white font-mono text-[10px] font-bold px-2 py-0.5 tracking-wider">

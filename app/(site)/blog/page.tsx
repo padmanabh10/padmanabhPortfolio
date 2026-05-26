@@ -6,6 +6,7 @@ import { getBlogs } from "@/lib/api";
 export const metadata: Metadata = { title: "Blog" };
 import type { BlogPost } from "@/lib/types";
 import NewsletterForm from "@/components/NewsletterForm";
+import PageHeader from "@/components/PageHeader";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -36,8 +37,8 @@ export default async function BlogPage() {
 
   return (
     <>
-      <section className="px-8 md:px-24 pt-16 pb-12">
-        <h1 className="font-heading text-6xl md:text-8xl uppercase text-text leading-none">
+      <PageHeader>
+        <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl uppercase text-text leading-none">
           PERSONAL
           <br />
           BLOGS
@@ -46,7 +47,7 @@ export default async function BlogPage() {
           Personal reflections and technical deep-dives into system design,
           software architecture, and the lessons learned along the way.
         </p>
-      </section>
+      </PageHeader>
 
       {featured ? (
         <FeaturedPost post={featured} />
@@ -57,14 +58,14 @@ export default async function BlogPage() {
       )}
 
       {recent.length > 0 && (
-        <section className="px-8 md:px-24 pb-16">
-          <div className="flex items-center gap-6 mb-8">
+        <section className="px-4 sm:px-8 md:px-24 pb-16">
+          <div className="flex items-center gap-4 sm:gap-6 mb-8">
             <h2 className="font-heading text-3xl uppercase text-text whitespace-nowrap">
               RECENT BLOGS
             </h2>
             <div className="flex-1 h-px bg-border hidden md:block" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {recent.map((article) => (
               <Link
                 key={article._id}
@@ -96,7 +97,7 @@ export default async function BlogPage() {
         </section>
       )}
 
-      <section className="mx-8 md:mx-24 mb-16 bg-primary p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+      <section className="mx-4 sm:mx-8 md:mx-24 mb-16 bg-primary p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
         <div>
           <h2 className="font-heading text-4xl md:text-5xl text-white uppercase">
             STAY IN THE LOOP
@@ -114,7 +115,7 @@ export default async function BlogPage() {
 
 function FeaturedPost({ post }: { post: BlogPost }) {
   return (
-    <section className="px-8 md:px-24 pb-16">
+    <section className="px-4 sm:px-8 md:px-24 pb-16">
       <Link
         href={`/blog/${post.slug}`}
         className="block bg-bg-card border border-border overflow-hidden"

@@ -42,7 +42,7 @@ async function main() {
   app.use(errorHandler);
 
   app.listen(env.PORT, () => {
-    console.log(`[server] listening on http://localhost:${env.PORT}`);
+    console.log(`[server] listening on port:${env.PORT}`);
   });
 }
 

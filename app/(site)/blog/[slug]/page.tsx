@@ -23,7 +23,7 @@ export default async function BlogPostPage({
   if (!post || !post.published) notFound();
 
   return (
-    <article className="px-8 md:px-24 pt-16 pb-24 max-w-4xl mx-auto">
+    <article className="px-4 sm:px-8 md:px-24 pt-12 sm:pt-16 pb-24 max-w-4xl mx-auto">
       <Link
         href="/blog"
         className="font-mono text-xs text-text-muted hover:text-primary"
@@ -42,7 +42,7 @@ export default async function BlogPostPage({
             </span>
           ))}
         </div>
-        <h1 className="font-heading text-4xl md:text-6xl uppercase text-text leading-tight">
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl uppercase text-text leading-tight">
           {post.title}
         </h1>
         <p className="font-mono text-sm text-text-secondary mt-4">

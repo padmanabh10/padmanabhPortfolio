@@ -7,6 +7,8 @@ const schema = z.object({
   ADMIN_EMAIL: z.string().email(),
   ADMIN_PASSWORD: z.string().min(8),
 
+  GMAIL_APP_PASSWORD: z.string().optional().default(""),
+
   CLOUDINARY_CLOUD_NAME: z.string().optional().default(""),
   CLOUDINARY_API_KEY: z.string().optional().default(""),
   CLOUDINARY_API_SECRET: z.string().optional().default(""),

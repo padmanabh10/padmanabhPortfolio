@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { getBlogs } from "@/lib/api";
+import { apiServer } from "@/lib/api-server";
+import type { BlogPost } from "@/lib/types";
 import DeleteButton from "@/components/admin/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBlogPage() {
-  const posts = await getBlogs({ all: true });
+  const posts = await apiServer<BlogPost[]>("/api/blogs?all=1");
 
   return (
     <div>

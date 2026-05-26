@@ -89,14 +89,14 @@ export default function AboutIntro() {
   }, []);
 
   return (
-    <section className="px-8 md:px-24 pt-16 pb-24">
+    <section className="px-4 sm:px-8 md:px-24 pt-12 sm:pt-16 pb-16 sm:pb-24">
       <div className="flex flex-col md:flex-row gap-12 items-start">
         <div className="flex-1 text-justify">
-          <div className="space-y-6 min-h-[320px]">
+          <div className="space-y-4 sm:space-y-6 min-h-[280px] sm:min-h-[320px]">
             {fullText.map((para, i) => (
               <p
                 key={i}
-                className="font-mono text-lg md:text-2xl text-text-secondary leading-relaxed"
+                className="font-mono text-base sm:text-lg md:text-2xl text-text-secondary leading-relaxed"
                 style={{ visibility: displayedParas[i] ? "visible" : "hidden" }}
               >
                 {displayedParas[i] || para}

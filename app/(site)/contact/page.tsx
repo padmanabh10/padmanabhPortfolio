@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, type FormEvent } from "react";
 import { api, ApiError } from "@/lib/api";
+import PageHeader from "@/components/PageHeader";
 
 const channels: { label: string; href: string; icon?: string }[] = [
   { label: "GITHUB", href: "https://github.com/padmanabh10", icon: "/images/github.png" },
@@ -86,8 +87,8 @@ export default function ContactPage() {
   return (
     <>
       {/* Header */}
-      <section className="px-8 md:px-24 pt-16 pb-12">
-        <h1 className="font-heading text-6xl md:text-8xl uppercase text-text leading-none">
+      <PageHeader>
+        <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl uppercase text-text leading-none">
           GET IN
           <br />
           TOUCH
@@ -97,12 +98,12 @@ export default function ContactPage() {
           REACH OUT FOR PROJECT COLLABORATIONS, TECHNICAL CONSULTING,
           OR CAREER OPPORTUNITIES.
         </p>
-      </section>
+      </PageHeader>
 
       {/* Main content */}
-      <section className="px-8 md:px-24 pb-16 grid grid-cols-1 md:grid-cols-5 gap-8">
+      <section className="px-4 sm:px-8 md:px-24 pb-16 grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8">
         {/* Form */}
-        <div className="md:col-span-3 bg-bg-card border border-border p-8">
+        <div className="md:col-span-3 bg-bg-card border border-border p-5 sm:p-8">
           <h2 className="font-heading text-2xl uppercase text-text mb-8">
             MESSAGE INTERFACE
           </h2>

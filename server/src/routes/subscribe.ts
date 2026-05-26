@@ -3,6 +3,7 @@ import { z } from "zod";
 import rateLimit from "express-rate-limit";
 import { Subscriber } from "../models/Subscriber.js";
 import { requireAuth } from "../middleware/auth.js";
+import { MAX_SUBSCRIBERS, verifyUnsubscribe } from "../lib/email.js";
 
 const router = Router();
 
@@ -22,13 +23,39 @@ router.post("/", subscribeLimiter, async (req, res, next) => {
   try {
     const { email } = subscribeSchema.parse(req.body);
     const normalized = email.toLowerCase().trim();
+
+    const existing = await Subscriber.exists({ email: normalized });
+    if (!existing) {
+      const count = await Subscriber.countDocuments();
+      if (count >= MAX_SUBSCRIBERS) {
+        res.status(200).json({ ok: false, error: "Subscriber list is full" });
+        return;
+      }
+    }
+
     await Subscriber.updateOne(
       { email: normalized },
       { $setOnInsert: { email: normalized } },
       { upsert: true }
     );
-    // Always 200 (don't leak whether the email is new vs existing)
     res.status(200).json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/unsubscribe", async (req, res, next) => {
+  try {
+    const email = typeof req.query.email === "string" ? req.query.email.toLowerCase().trim() : "";
+    const token = typeof req.query.token === "string" ? req.query.token : "";
+
+    if (!email || !token || !verifyUnsubscribe(email, token)) {
+      res.status(400).json({ ok: false, error: "Invalid unsubscribe link" });
+      return;
+    }
+
+    await Subscriber.deleteOne({ email });
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

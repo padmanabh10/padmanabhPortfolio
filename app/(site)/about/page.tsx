@@ -38,19 +38,41 @@ const experience = [
   },
 ];
 
-const skills = [
-  { label: "LANGUAGES & FRAMEWORKS", items: "Python, C++, JavaScript, TypeScript, SQL, React.js, Flask, Node.js, NestJS" },
-  { label: "CLOUD & DEVOPS", items: "AWS, Docker, Kubernetes, GitHub Actions, Linux" },
-  { label: "DATABASES", items: "MongoDB, MySQL, ChromaDB, Pinecone, Redis, SQLite, PostgreSQL" },
-  { label: "AI & LLM", items: "LLMs & Embeddings, RAG Pipelines, Prompt Engineering, LangChain, Claude Code" },
-  { label: "ML LIBRARIES", items: "NumPy, Pandas, Scikit-learn, TensorFlow" },
-];
 
+const techs = [
+  { name: "Python", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+  { name: "C++", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
+  { name: "JavaScript", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+  { name: "TypeScript", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+  { name: "React", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+  { name: "Node.js", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+  { name: "NestJS", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg" },
+  { name: "Flask", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
+  { name: "SQL", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azuresqldatabase/azuresqldatabase-original.svg" },
+  { name: "AWS", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
+  { name: "Docker", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+  { name: "Kubernetes", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-original.svg" },
+  { name: "GitHub Actions", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg" },
+  { name: "Linux", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
+  { name: "MongoDB", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+  { name: "MySQL", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+  { name: "PostgreSQL", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+  { name: "Redis", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
+  { name: "SQLite", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" },
+  { name: "NumPy", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
+  { name: "Pandas", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
+  { name: "Scikit-learn", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" },
+  { name: "TensorFlow", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" },
+  { name: "LangChain", img: "/images/LangChain_Logo.png" },
+  { name: "Claude Code", img: "/images/claude.png" },
+  { name: "ChromaDB", img: "/images/Chroma--Streamline-Svg-Logos.png" },
+  { name: "Pinecone", img: "/images/Pinecone-Full-Logo-Black.svg.png" },
+];
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-6 mb-12">
-      <h2 className="font-heading text-5xl uppercase text-primary whitespace-nowrap">
+    <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap">
         {title}
       </h2>
       <div className="flex-1 h-0.5 bg-primary/30 hidden md:block" />
@@ -64,13 +86,13 @@ export default function AboutPage() {
       <AboutIntro />
 
       {/* Education */}
-      <section className="px-8 md:px-24 py-24 border-t border-border">
+      <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
         <SectionHeader title="EDUCATION" />
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-border">
           {education.map((edu) => (
             <li
               key={edu.school}
-              className="group bg-bg-card p-8 flex flex-col justify-between min-h-[220px] transition-colors duration-300 hover:bg-primary cursor-default"
+              className="group bg-bg-card p-5 sm:p-8 flex flex-col justify-between min-h-[200px] sm:min-h-[220px] transition-colors duration-300 hover:bg-primary cursor-default"
             >
               <div>
                 <span className="font-mono text-sm font-bold text-text-muted tracking-widest transition-colors duration-300 group-hover:text-tag-text/70">
@@ -92,7 +114,7 @@ export default function AboutPage() {
       </section>
 
       {/* Experience */}
-      <section className="px-8 md:px-24 py-24 border-t border-border bg-bg-alt">
+      <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border bg-bg-alt">
         <SectionHeader title="EXPERIENCE" />
         <div className="flex flex-col gap-8">
           {experience.map((exp) => (
@@ -135,19 +157,23 @@ export default function AboutPage() {
       </section>
 
       {/* Technical Skills */}
-      <section className="px-8 md:px-24 py-24 border-t border-border">
+      <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
         <SectionHeader title="TECH STACK" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
-          {skills.map((row) => (
+        <div className="flex flex-wrap gap-3">
+          {techs.map((tech) => (
             <div
-              key={row.label}
-              className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 border-b border-border pb-4"
+              key={tech.name}
+              className="flex items-center gap-3 bg-bg-card border border-border rounded-lg px-4 py-3 hover:border-primary/50 transition-colors"
             >
-              <span className="font-mono text-xs font-bold uppercase text-primary tracking-widest min-w-[170px]">
-                {row.label}
-              </span>
-              <span className="font-mono text-sm text-text leading-relaxed">
-                {row.items}
+              <img
+                src={tech.img}
+                alt={tech.name}
+                width={28}
+                height={28}
+                className="w-7 h-7 object-contain"
+              />
+              <span className="font-mono text-xs font-bold text-text uppercase tracking-wider">
+                {tech.name}
               </span>
             </div>
           ))}
