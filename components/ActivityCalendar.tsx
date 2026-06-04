@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 type Platform = "github" | "gitlab" | "leetcode" | "codeforces" | "codechef" | "geeksforgeeks";
 
@@ -210,12 +210,19 @@ export default function ActivityCalendar() {
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<Set<Platform>>(new Set(ALL));
   const [hoveredCell, setHoveredCell] = useState<CellData | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/activity")
       .then(r => r.json())
       .then(data => { setDays(data.days ?? []); setLoading(false); })
       .catch(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
   }, []);
 
   const isAll = active.size === PLATFORM_KEYS.length;
@@ -291,8 +298,8 @@ export default function ActivityCalendar() {
       <div className="flex flex-col lg:flex-row gap-6 items-start">
 
         {/* ── Heatmap ── */}
-        <div className="flex-1 min-w-0">
-          <div className="overflow-x-auto pb-1">
+        <div className="flex-1 min-w-0 w-full">
+          <div ref={scrollRef} className="overflow-x-auto pb-1 scrollbar-none">
             <div style={{ display: "flex", alignItems: "flex-start", width: "max-content" }}>
 
               {/* Day labels */}
@@ -348,15 +355,16 @@ export default function ActivityCalendar() {
           </div>
         </div>
 
-        {/* ── Right panel ── */}
-        {hoveredCell && (
-          <div
-            className="w-full lg:w-60 xl:w-64 shrink-0 border border-border-accent bg-bg-card"
-            style={{ height: 7 * CELL + 6 * GAP + 16 + GAP + 80 }}
-          >
-            <Panel cell={hoveredCell} active={active} />
-          </div>
-        )}
+        {/* ── Right panel ── always reserved so layout never shifts */}
+        <div
+          className="hidden lg:block w-60 xl:w-64 shrink-0 border border-border-accent bg-bg-card"
+          style={{ height: 16 + GAP + 7 * CELL + 6 * GAP }}
+        >
+          {hoveredCell
+            ? <Panel cell={hoveredCell} active={active} />
+            : <p className="font-mono text-[10px] text-text-muted p-4">Hover a day to see details</p>
+          }
+        </div>
       </div>
     </div>
   );
