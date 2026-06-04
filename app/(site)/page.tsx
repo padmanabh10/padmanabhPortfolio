@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/HeroSection";
-
-export const metadata: Metadata = { title: "Home" };
 import ProjectsSection from "@/components/ProjectsSection";
 import FormationSpecs from "@/components/FormationSpecs";
 import { getProjects, getBlogs } from "@/lib/api";
+
+export const metadata: Metadata = { title: "Home" };
 
 export default async function Home() {
   const [allProjects, allBlogs] = await Promise.all([

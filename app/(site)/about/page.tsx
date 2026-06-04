@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AboutIntro from "@/components/AboutIntro";
+import ActivityCalendar from "@/components/ActivityCalendar";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -178,6 +179,12 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Activity Calendar */}
+      <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border bg-bg-alt">
+        <SectionHeader title="ACTIVITY" />
+        <ActivityCalendar />
       </section>
 
     </>
