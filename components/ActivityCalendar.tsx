@@ -344,6 +344,7 @@ export default function ActivityCalendar() {
                             }}
                             onMouseEnter={() => handleCellEnter(cell)}
                             onMouseLeave={handleCellLeave}
+                            onClick={() => handleCellEnter(cell)}
                           />
                         );
                       })}
@@ -355,7 +356,7 @@ export default function ActivityCalendar() {
           </div>
         </div>
 
-        {/* ── Right panel ── always reserved so layout never shifts */}
+        {/* ── Right panel (desktop) ── always reserved so layout never shifts */}
         <div
           className="hidden lg:block w-60 xl:w-64 shrink-0 border border-border-accent bg-bg-card"
           style={{ height: 16 + GAP + 7 * CELL + 6 * GAP }}
@@ -366,6 +367,13 @@ export default function ActivityCalendar() {
           }
         </div>
       </div>
+
+      {/* ── Bottom panel (mobile) ── shown on tap */}
+      {hoveredCell && (
+        <div className="lg:hidden mt-4 border border-border-accent bg-bg-card">
+          <Panel cell={hoveredCell} active={active} />
+        </div>
+      )}
     </div>
   );
 }
