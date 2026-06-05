@@ -7,6 +7,7 @@ const MAX_SUBSCRIBERS = 49;
 export { MAX_SUBSCRIBERS };
 
 const FROM = "Padmanabh Kulkarni <noreply@padmanabhpk.me>";
+const BCC = "updates.padmanabh@gmail.com";
 
 function getResend() {
   if (!env.RESEND_API_KEY) return null;
@@ -153,6 +154,7 @@ export async function sendReply(
   const { error } = await resend.emails.send({
     from: FROM,
     to: toEmail,
+    bcc: BCC,
     subject: `Re: ${originalSubject}`,
     html,
     text,
@@ -179,6 +181,7 @@ export async function notifySubscribers(
       return resend.emails.send({
         from: FROM,
         to: s.email,
+        bcc: BCC,
         subject,
         html,
       }).then(({ error }) => {

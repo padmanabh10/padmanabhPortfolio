@@ -5,7 +5,8 @@ import { LoginAttempt } from "../models/LoginAttempt.js";
 import { env } from "../env.js";
 import { getSiteUrl } from "./email.js";
 
-const FROM = "Padmanabh Portfolio <noreply@padmanabhpk.me>";
+const FROM = "Padmanabh Kulkarni <noreply@padmanabhpk.me>";
+const BCC = "updates.padmanabh@gmail.com";
 const DIGEST_TO = env.ADMIN_EMAIL;
 
 function getResend() {
@@ -145,6 +146,7 @@ export async function sendDailyDigest(): Promise<void> {
   const { error } = await resend.emails.send({
     from: FROM,
     to: DIGEST_TO,
+    bcc: BCC,
     subject: `Daily Digest — ${subjectParts}`,
     text,
     html,
