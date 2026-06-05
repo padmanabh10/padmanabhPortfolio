@@ -73,7 +73,7 @@ router.post("/login", loginLimiter, async (req, res, next) => {
 
 router.get("/suspicious", requireAuth, async (_req, res, next) => {
   try {
-    const attempts = await LoginAttempt.find({ suspicious: true })
+    const attempts = await LoginAttempt.find({ suspicious: true, dismissed: { $ne: true } })
       .sort({ createdAt: -1 })
       .limit(50)
       .lean();
@@ -84,6 +84,23 @@ router.get("/suspicious", requireAuth, async (_req, res, next) => {
       userAgent: a.userAgent,
       createdAt: a.createdAt,
     })));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/suspicious/:id/dismiss", requireAuth, async (req, res, next) => {
+  try {
+    const doc = await LoginAttempt.findByIdAndUpdate(
+      req.params.id,
+      { dismissed: true },
+      { new: true }
+    ).lean();
+    if (!doc) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

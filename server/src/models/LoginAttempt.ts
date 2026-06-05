@@ -6,6 +6,7 @@ const loginAttemptSchema = new Schema(
     email: { type: String, default: "" },
     userAgent: { type: String, default: "" },
     suspicious: { type: Boolean, default: false },
+    dismissed: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

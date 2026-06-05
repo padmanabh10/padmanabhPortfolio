@@ -12,6 +12,7 @@ interface ContactItem {
   subject: string;
   message: string;
   handled: boolean;
+  ip?: string;
   createdAt: string;
 }
 
@@ -88,6 +89,7 @@ export default async function SubmissionsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
                     <span>{fmt(c.createdAt)}</span>
+                    {c.ip && <span className="font-mono">{c.ip}</span>}
                     {!c.handled && <ReplyModal id={c._id} toName={c.name} toEmail={c.email} subject={c.subject} />}
                     <HandledToggle id={c._id} handled={c.handled} />
                     <DeleteButton path={`/api/contact/${c._id}`} />

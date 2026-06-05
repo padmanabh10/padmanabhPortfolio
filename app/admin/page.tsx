@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { apiServer } from "@/lib/api-server";
 import { getProjects, getBlogs } from "@/lib/api";
+import DismissButton from "@/components/admin/DismissButton";
 
 export const dynamic = "force-dynamic";
 
@@ -121,7 +122,7 @@ export default async function AdminHome() {
       {suspicious.length > 0 && (
         <section>
           <h2 className="font-bold text-sm tracking-wider mb-3 text-red-700">
-            ⚠ SUSPICIOUS LOGIN ATTEMPTS ({suspicious.length})
+            SUSPICIOUS LOGIN ATTEMPTS ({suspicious.length})
           </h2>
           <ul className="space-y-2">
             {suspicious.map((a) => (
@@ -138,9 +139,10 @@ export default async function AdminHome() {
                       </span>
                     )}
                   </div>
-                  <span className="text-[var(--color-text-muted)] shrink-0">
-                    {fmt(a.createdAt)}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-[var(--color-text-muted)]">{fmt(a.createdAt)}</span>
+                    <DismissButton id={a._id} />
+                  </div>
                 </div>
                 {a.userAgent && (
                   <p className="text-[10px] text-[var(--color-text-muted)] truncate">

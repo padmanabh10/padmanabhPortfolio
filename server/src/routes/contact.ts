@@ -25,7 +25,8 @@ const submitSchema = z.object({
 router.post("/", submitLimiter, async (req, res, next) => {
   try {
     const data = submitSchema.parse(req.body);
-    const doc = await ContactSubmission.create(data);
+    const ip = (req.ip ?? req.socket.remoteAddress ?? "").replace(/^::ffff:/, "");
+    const doc = await ContactSubmission.create({ ...data, ip });
     res.status(201).json({ ok: true, id: String(doc._id) });
   } catch (err) {
     next(err);
@@ -43,6 +44,7 @@ router.get("/", requireAuth, async (_req, res, next) => {
         subject: d.subject,
         message: d.message,
         handled: !!d.handled,
+        ip: d.ip ?? "",
         createdAt: d.createdAt,
       }))
     );
