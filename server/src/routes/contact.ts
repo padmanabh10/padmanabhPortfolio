@@ -3,6 +3,7 @@ import { z } from "zod";
 import rateLimit from "express-rate-limit";
 import { ContactSubmission } from "../models/ContactSubmission.js";
 import { requireAuth } from "../middleware/auth.js";
+import { sendReply } from "../lib/email.js";
 
 const router = Router();
 
@@ -62,6 +63,21 @@ router.patch("/:id", requireAuth, async (req, res, next) => {
       res.status(404).json({ error: "Submission not found" });
       return;
     }
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/:id/reply", requireAuth, async (req, res, next) => {
+  try {
+    const { body } = z.object({ body: z.string().min(1).max(10000) }).parse(req.body);
+    const doc = await ContactSubmission.findById(req.params.id).lean();
+    if (!doc) {
+      res.status(404).json({ error: "Submission not found" });
+      return;
+    }
+    await sendReply(doc.email, doc.name, doc.subject, doc.message, body);
     res.json({ ok: true });
   } catch (err) {
     next(err);

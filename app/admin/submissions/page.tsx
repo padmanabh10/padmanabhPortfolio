@@ -1,6 +1,7 @@
 import { apiServer } from "@/lib/api-server";
 import DeleteButton from "@/components/admin/DeleteButton";
 import HandledToggle from "@/components/admin/HandledToggle";
+import ReplyModal from "@/components/admin/ReplyModal";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,7 @@ export default async function SubmissionsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-[var(--color-text-muted)]">
                     <span>{fmt(c.createdAt)}</span>
+                    {!c.handled && <ReplyModal id={c._id} toName={c.name} toEmail={c.email} subject={c.subject} />}
                     <HandledToggle id={c._id} handled={c.handled} />
                     <DeleteButton path={`/api/contact/${c._id}`} />
                   </div>
