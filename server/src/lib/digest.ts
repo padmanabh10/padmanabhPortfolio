@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { ContactSubmission } from "../models/ContactSubmission.js";
 import { Subscriber } from "../models/Subscriber.js";
+import { LoginAttempt } from "../models/LoginAttempt.js";
 import { env } from "../env.js";
 import { getSiteUrl } from "./email.js";
 
@@ -22,12 +23,13 @@ export async function sendDailyDigest(): Promise<void> {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [newSubscribers, unhandledMessages] = await Promise.all([
+  const [newSubscribers, unhandledMessages, suspiciousAttempts] = await Promise.all([
     Subscriber.find({ createdAt: { $gte: todayStart } }).lean(),
     ContactSubmission.find({ handled: false }).sort({ createdAt: -1 }).lean(),
+    LoginAttempt.find({ suspicious: true, createdAt: { $gte: todayStart } }).sort({ createdAt: -1 }).lean(),
   ]);
 
-  if (newSubscribers.length === 0 && unhandledMessages.length === 0) return;
+  if (newSubscribers.length === 0 && unhandledMessages.length === 0 && suspiciousAttempts.length === 0) return;
 
   const siteUrl = getSiteUrl();
 
@@ -59,6 +61,24 @@ export async function sendDailyDigest(): Promise<void> {
       <td style="font-family:'Courier New',Courier,monospace;font-size:11.5px;color:#6b8475;padding:10px 14px;border-bottom:1px solid #c8e0d0;white-space:nowrap;">${fmtDate(m.createdAt as Date)}</td>
     </tr>`).join("");
 
+  const suspiciousRows = suspiciousAttempts.map((a) => `
+    <tr>
+      <td style="font-family:'Courier New',Courier,monospace;font-size:13px;color:#7f1d1d;padding:10px 14px;border-bottom:1px solid #fca5a5;font-weight:700;">${escape(a.ip)}</td>
+      <td style="font-family:'Courier New',Courier,monospace;font-size:12px;color:#991b1b;padding:10px 14px;border-bottom:1px solid #fca5a5;">${escape(a.email)}</td>
+      <td style="font-family:'Courier New',Courier,monospace;font-size:11px;color:#b91c1c;padding:10px 14px;border-bottom:1px solid #fca5a5;max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${escape(a.userAgent)}</td>
+      <td style="font-family:'Courier New',Courier,monospace;font-size:11.5px;color:#6b8475;padding:10px 14px;border-bottom:1px solid #fca5a5;white-space:nowrap;">${fmtDate(a.createdAt as Date)}</td>
+    </tr>`).join("");
+
+  const suspiciousSection = suspiciousAttempts.length > 0 ? `
+    <tr><td style="padding-bottom:8px;">
+      <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#dc2626;margin:0 0 12px 0;">
+        ⚠ Suspicious Login Attempts Today — ${suspiciousAttempts.length}
+      </p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#fef2f2;border:1px solid #fca5a5;border-radius:8px;overflow:hidden;">
+        <tbody>${suspiciousRows}</tbody>
+      </table>
+    </td></tr>` : "";
+
   const subscriberSection = newSubscribers.length > 0 ? `
     <tr><td style="padding-bottom:8px;">
       <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#0f7a4f;margin:0 0 12px 0;">
@@ -87,6 +107,7 @@ export async function sendDailyDigest(): Promise<void> {
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:17px;line-height:1.6;color:#1f2a23;font-weight:700;padding-bottom:6px;">Daily Digest</td></tr>
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:13px;color:#6b8475;padding-bottom:28px;">${new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</td></tr>
 
+            ${suspiciousSection}
             ${subscriberSection}
             ${messageSection}
 
@@ -111,19 +132,26 @@ export async function sendDailyDigest(): Promise<void> {
   const text = [
     `Daily Digest`,
     ``,
+    suspiciousAttempts.length > 0 ? `Suspicious Login Attempts (${suspiciousAttempts.length}):\n${suspiciousAttempts.map((a) => `  ${a.ip} — tried "${a.email}" — ${a.userAgent.slice(0, 60)}`).join("\n")}` : "",
     newSubscribers.length > 0 ? `New Subscribers (${newSubscribers.length}):\n${newSubscribers.map((s) => `  ${s.email}`).join("\n")}` : "",
     unhandledMessages.length > 0 ? `Unhandled Messages (${unhandledMessages.length}):\n${unhandledMessages.map((m) => `  ${m.name} <${m.email}> — ${m.subject}`).join("\n")}` : "",
     ``,
-    `${siteUrl}/admin/submissions`,
+    `${siteUrl}/admin`,
   ].filter(Boolean).join("\n\n");
+
+  const subjectParts = [
+    suspiciousAttempts.length > 0 ? `${suspiciousAttempts.length} suspicious` : "",
+    newSubscribers.length > 0 ? `${newSubscribers.length} subscriber${newSubscribers.length !== 1 ? "s" : ""}` : "",
+    unhandledMessages.length > 0 ? `${unhandledMessages.length} unhandled` : "",
+  ].filter(Boolean).join(", ");
 
   await transporter.sendMail({
     from: `Padmanabh Portfolio <${GMAIL_USER}>`,
     to: DIGEST_TO,
-    subject: `Daily Digest — ${newSubscribers.length} subscriber${newSubscribers.length !== 1 ? "s" : ""}, ${unhandledMessages.length} unhandled`,
+    subject: `Daily Digest — ${subjectParts}`,
     text,
     html,
   });
 
-  console.log(`[digest] Sent — ${newSubscribers.length} subscribers, ${unhandledMessages.length} unhandled messages`);
+  console.log(`[digest] Sent — ${suspiciousAttempts.length} suspicious, ${newSubscribers.length} subscribers, ${unhandledMessages.length} unhandled`);
 }

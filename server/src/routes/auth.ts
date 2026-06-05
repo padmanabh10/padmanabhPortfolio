@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import rateLimit from "express-rate-limit";
 import { User } from "../models/User.js";
+import { LoginAttempt } from "../models/LoginAttempt.js";
 import { AUTH_COOKIE, requireAuth, signAuthToken } from "../middleware/auth.js";
 import { HttpError } from "../middleware/error.js";
 import { env, isProd } from "../env.js";
@@ -39,14 +40,50 @@ function cookieOptions() {
 router.post("/login", loginLimiter, async (req, res, next) => {
   try {
     const { email, password } = loginSchema.parse(req.body);
-    const user = await User.findOne({ email: email.toLowerCase() }).lean();
-    if (!user) throw new HttpError(401, "Invalid credentials");
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) throw new HttpError(401, "Invalid credentials");
+    const ip = (req.ip ?? req.socket.remoteAddress ?? "unknown").replace(/^::ffff:/, "");
+    const userAgent = req.headers["user-agent"] ?? "";
 
-    const token = signAuthToken({ uid: String(user._id) });
+    const user = await User.findOne({ email: email.toLowerCase() }).lean();
+    const ok = user ? await bcrypt.compare(password, user.passwordHash) : false;
+
+    if (!ok) {
+      const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const recentCount = await LoginAttempt.countDocuments({ ip, createdAt: { $gte: dayAgo } });
+      const suspicious = recentCount >= 1;
+
+      await LoginAttempt.create({ ip, email, userAgent, suspicious });
+
+      if (suspicious) {
+        await LoginAttempt.updateMany(
+          { ip, createdAt: { $gte: dayAgo }, suspicious: false },
+          { suspicious: true }
+        );
+      }
+
+      throw new HttpError(401, "Invalid credentials");
+    }
+
+    const token = signAuthToken({ uid: String(user!._id) });
     res.cookie(AUTH_COOKIE, token, cookieOptions());
-    res.json({ user: { id: String(user._id), email: user.email } });
+    res.json({ user: { id: String(user!._id), email: user!.email } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/suspicious", requireAuth, async (_req, res, next) => {
+  try {
+    const attempts = await LoginAttempt.find({ suspicious: true })
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+    res.json(attempts.map((a) => ({
+      _id: String(a._id),
+      ip: a.ip,
+      email: a.email,
+      userAgent: a.userAgent,
+      createdAt: a.createdAt,
+    })));
   } catch (err) {
     next(err);
   }

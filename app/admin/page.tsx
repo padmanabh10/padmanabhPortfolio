@@ -4,6 +4,14 @@ import { getProjects, getBlogs } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
+interface LoginAttemptItem {
+  _id: string;
+  ip: string;
+  email: string;
+  userAgent: string;
+  createdAt: string;
+}
+
 interface ContactItem {
   _id: string;
   name: string;
@@ -32,11 +40,12 @@ function fmt(iso: string) {
 }
 
 export default async function AdminHome() {
-  const [projects, blogs, contacts, subscribers] = await Promise.all([
+  const [projects, blogs, contacts, subscribers, suspicious] = await Promise.all([
     getProjects(),
     getBlogs({ all: true }),
     apiServer<ContactItem[]>("/api/contact").catch(() => []),
     apiServer<SubscriberItem[]>("/api/subscribe").catch(() => []),
+    apiServer<LoginAttemptItem[]>("/api/auth/suspicious").catch(() => []),
   ]);
 
   const unhandled = contacts.filter((c) => !c.handled);
@@ -106,6 +115,41 @@ export default async function AdminHome() {
               + {unhandled.length - 5} more →
             </Link>
           )}
+        </section>
+      )}
+
+      {suspicious.length > 0 && (
+        <section>
+          <h2 className="font-bold text-sm tracking-wider mb-3 text-red-700">
+            ⚠ SUSPICIOUS LOGIN ATTEMPTS ({suspicious.length})
+          </h2>
+          <ul className="space-y-2">
+            {suspicious.map((a) => (
+              <li
+                key={a._id}
+                className="border border-red-200 bg-red-50 p-3 text-xs space-y-1"
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <div className="flex gap-3">
+                    <span className="font-bold text-red-700">{a.ip}</span>
+                    {a.email && (
+                      <span className="text-[var(--color-text-muted)]">
+                        tried: <span className="text-[var(--color-text)]">{a.email}</span>
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[var(--color-text-muted)] shrink-0">
+                    {fmt(a.createdAt)}
+                  </span>
+                </div>
+                {a.userAgent && (
+                  <p className="text-[10px] text-[var(--color-text-muted)] truncate">
+                    {a.userAgent}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
