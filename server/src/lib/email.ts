@@ -28,7 +28,7 @@ function getTransporter() {
   });
 }
 
-function getSiteUrl(): string {
+export function getSiteUrl(): string {
   return env.CORS_ORIGIN.split(",")[0]!.trim();
 }
 

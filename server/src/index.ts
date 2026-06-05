@@ -1,3 +1,4 @@
+import cron from "node-cron";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -11,6 +12,7 @@ import blogsRouter from "./routes/blogs.js";
 import uploadsRouter from "./routes/uploads.js";
 import contactRouter from "./routes/contact.js";
 import subscribeRouter from "./routes/subscribe.js";
+import { sendDailyDigest } from "./lib/digest.js";
 
 async function main() {
   await connectDb();
@@ -40,6 +42,11 @@ async function main() {
 
   app.use(notFound);
   app.use(errorHandler);
+
+  // Daily digest at 11:00 PM IST (17:30 UTC)
+  cron.schedule("30 17 * * *", () => {
+    sendDailyDigest().catch((err) => console.error("[digest] Failed:", err));
+  });
 
   app.listen(env.PORT, () => {
     console.log(`[server] listening on port:${env.PORT}`);
