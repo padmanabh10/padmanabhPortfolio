@@ -1,8 +1,8 @@
 # Padmanabh Portfolio
 
-A full-stack developer portfolio with a hidden admin panel, blog/project CMS, newsletter system, and contact form with email notifications.
+A full-stack developer portfolio with a hidden admin panel, blog/project CMS, newsletter system, contact form with email reply, activity calendar, and daily digest with security monitoring.
 
-**Stack:** Next.js 16 + React 19 | Express + MongoDB | Tailwind CSS 4 | TipTap Editor | Cloudinary | Nodemailer
+**Stack:** Next.js 16 + React 19 | Express + MongoDB | Tailwind CSS 4 | TipTap Editor | Cloudinary | Nodemailer | node-cron
 
 ---
 
@@ -16,11 +16,15 @@ A full-stack developer portfolio with a hidden admin panel, blog/project CMS, ne
 - [Project System](#project-system)
 - [Contact Form & Submissions](#contact-form--submissions)
 - [Newsletter / Subscribers](#newsletter--subscribers)
-- [Cloudinary Image Uploads](#cloudinary-image-uploads)
 - [Email Notifications](#email-notifications)
+- [Daily Digest](#daily-digest)
+- [Security Monitoring](#security-monitoring)
+- [Activity Calendar](#activity-calendar)
+- [Cloudinary Image Uploads](#cloudinary-image-uploads)
 - [Authentication](#authentication)
 - [Theming & Design](#theming--design)
 - [Deployment](#deployment)
+- [API Endpoints](#api-endpoints)
 
 ---
 
@@ -34,6 +38,8 @@ Frontend (Next.js 16)          Backend (Express)
 ├── lib/api.ts  — data layer   ├── routes/uploads (Cloudinary)
 └── proxy.ts    — auth guard   ├── routes/contact
                                ├── routes/subscribe
+                               ├── lib/email.ts
+                               ├── lib/digest.ts
                                └── middleware/error
 ```
 
@@ -50,7 +56,7 @@ Frontend (Next.js 16)          Backend (Express)
 - Node.js 18+
 - MongoDB (local or Atlas)
 - (Optional) Cloudinary account for image uploads
-- (Optional) Gmail account with App Password for email notifications
+- (Optional) Gmail account with App Password for email features
 
 ### Install & Run
 
@@ -83,6 +89,13 @@ cd server && npm run dev                # backend  → http://localhost:4000
 | `NEXT_PUBLIC_API_URL` | Backend URL for client-side requests (default: `http://localhost:4000`) |
 | `INTERNAL_API_URL` | Backend URL for Server Components (bypasses Next.js rewrite, faster) |
 | `JWT_SECRET` | Must match the backend `JWT_SECRET` — used to verify auth tokens in middleware |
+| `GITHUB_USERNAME` | GitHub username for activity calendar |
+| `GITHUB_TOKEN` | GitHub personal access token (for contribution data) |
+| `GITLAB_USERNAME` | GitLab username for activity calendar |
+| `LEETCODE_USERNAME` | LeetCode username for activity calendar |
+| `CODEFORCES_HANDLE` | Codeforces handle for activity calendar |
+| `CODECHEF_USERNAME` | CodeChef username for activity calendar |
+| `GFG_USERNAME` | GeeksForGeeks username for activity calendar |
 
 ### Backend (`server/.env`)
 
@@ -90,7 +103,7 @@ cd server && npm run dev                # backend  → http://localhost:4000
 |---|---|---|
 | `MONGO_URI` | Yes | MongoDB connection string |
 | `JWT_SECRET` | Yes | 32+ character secret for signing JWTs |
-| `ADMIN_EMAIL` | Yes | Admin login email |
+| `ADMIN_EMAIL` | Yes | Admin login email — daily digest is sent here |
 | `ADMIN_PASSWORD` | Yes | Admin login password (8+ chars, hashed with bcrypt on seed) |
 | `GMAIL_APP_PASSWORD` | No | Gmail App Password for sending emails (requires 2FA on Gmail) |
 | `CLOUDINARY_CLOUD_NAME` | No | Cloudinary cloud name |
@@ -116,26 +129,26 @@ The admin panel is a hidden CMS accessible at `/padmanabh-login`. There is no li
 
 ### Dashboard (`/admin`)
 
-Displays stats at a glance:
-- Total projects
-- Published / draft blog posts
-- Total subscribers
-- Unread contact submissions
+Displays at a glance:
+- Total projects, published/draft blog posts, total subscribers, unread contact submissions
+- Recent unread contact messages
+- Suspicious login attempts (if any) — with IP, email tried, user agent, and an Ignore button
+- Latest projects and blog posts
 
 ### Admin Routes
 
 | Route | Purpose |
 |---|---|
-| `/admin` | Dashboard with stats |
+| `/admin` | Dashboard with stats and security alerts |
 | `/admin/projects` | List, create, edit, delete projects |
 | `/admin/projects/new` | New project form |
 | `/admin/projects/[id]` | Edit existing project |
 | `/admin/blog` | List, create, edit, delete blog posts |
 | `/admin/blog/new` | New blog post form |
 | `/admin/blog/[id]` | Edit existing blog post |
-| `/admin/submissions` | View contact messages & manage subscribers |
+| `/admin/submissions` | View contact messages, reply, and manage subscribers |
 
-All `/admin/*` routes are protected by `proxy.ts` middleware that validates the JWT cookie and redirects to the login page if invalid.
+All `/admin/*` routes are protected by `proxy.ts` middleware that validates the JWT cookie and redirects to login if invalid.
 
 ---
 
@@ -150,15 +163,6 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 - **Read time** field
 - **Draft / Published** status — drafts are only visible in the admin panel
 - **HTML sanitization** on the server (sanitize-html) to prevent XSS
-- **Rate limiting** — 100 public requests per 15 minutes
-
-### How It Works
-
-1. Create/edit a post in the admin panel using the TipTap editor
-2. Upload images inline or set a cover image (goes to Cloudinary)
-3. Set status to "published" to make it public
-4. When a draft is published, all newsletter subscribers receive an email notification
-5. Posts are cached with 60-second ISR revalidation on the frontend
 
 ### Public Routes
 
@@ -177,14 +181,6 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 - **Featured** toggle — featured projects appear on the homepage (max 3)
 - **Auto-generated slug** from the title
 - **Tags** for categorization
-- All projects are public (no draft status)
-
-### How It Works
-
-1. Create/edit a project in the admin panel
-2. Set a category (new categories are created on the fly)
-3. Toggle "featured" to show on the homepage
-4. Subscribers are notified via email when a new project is created
 
 ### Public Routes
 
@@ -198,16 +194,25 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 ### Public Contact Page (`/contact`)
 
 - Fields: name, email, subject (dropdown), message (5000 char max)
-- Displays a live availability status (available 7-10pm IST, sleeping 10pm-7am, busy otherwise)
-- Shows social links (GitHub, LinkedIn, Blog, Email)
-- Rate-limited to 5 submissions per IP per hour
+- Displays a live availability status (available 7–10pm IST, sleeping 10pm–7am, busy otherwise)
+- Rate-limited to 3 submissions per IP per day
+- Sender's IP address is recorded with each submission
 
 ### Admin Submissions View (`/admin/submissions`)
 
-- Lists all contact messages
-- Mark messages as handled/unhandled
-- Delete messages
+- Lists all contact messages with sender IP, timestamp, and full message
+- **Reply** — opens a compose modal with a pre-filled branded email template (fixed greeting + editable body + fixed sign-off); sending auto-marks the message as handled
+- **Mark Handled / Unhandled** toggle
+- **Delete** message
 - View and manage newsletter subscribers
+
+### Email Reply Template
+
+Replies are sent from `updates.padmanabh@gmail.com` with:
+- The sender's original message quoted
+- Your reply body
+- Branded signature with site link, GitHub, and LinkedIn
+- Plain-text fallback and proper `Re:` threading headers to reduce spam likelihood
 
 ---
 
@@ -215,10 +220,9 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 
 ### How Users Subscribe
 
-- A subscribe form appears in the site footer on every page
-- Users enter their email and click subscribe
-- Rate-limited to 10 subscriptions per IP per hour
-- Max 49 subscribers (configurable in code via `MAX_SUBSCRIBERS`)
+- A subscribe form appears in the site footer
+- Rate-limited to 2 subscriptions per IP per day
+- Max 49 subscribers (configurable via `MAX_SUBSCRIBERS` in `server/src/lib/email.ts`)
 
 ### How Users Unsubscribe
 
@@ -228,8 +232,84 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 
 ### When Notifications Are Sent
 
-- A blog post changes from draft to published
+- A blog post changes from draft → published
 - A new project is created
+
+---
+
+## Email Notifications
+
+Uses **Nodemailer** with Gmail SMTP. All emails share a branded template — green dot-grid background, monospace font, and a consistent signature block.
+
+### Emails Sent
+
+| Trigger | Recipients | Content |
+|---|---|---|
+| Blog published | All subscribers | Title, excerpt, Read More button |
+| Project created | All subscribers | Title, description, Read More button |
+| Admin replies to contact | The contact's email | Quoted original message + reply body |
+| Daily digest (11 PM IST) | `ADMIN_EMAIL` | New subscribers, unhandled messages, suspicious logins |
+
+### Gmail Setup
+
+1. Enable 2-Factor Authentication on your Gmail account
+2. Generate an App Password: Google Account → Security → App Passwords
+3. Set `GMAIL_APP_PASSWORD` in `server/.env`
+
+> **Tip:** Gmail SMTP works but has limited deliverability for transactional mail. For production, consider switching to Resend or Postmark by replacing the transporter in `server/src/lib/email.ts`.
+
+---
+
+## Daily Digest
+
+Every day at **11:00 PM IST** the server sends a summary email to `ADMIN_EMAIL`. The email is skipped entirely if there is nothing to report.
+
+### What's Included
+
+- **Suspicious login attempts** — any flagged attempts from that day (IP, email tried, user agent)
+- **New subscribers** — emails that subscribed today
+- **Unhandled contact messages** — all messages not yet marked as handled
+
+The subject line summarises the counts, e.g.: `Daily Digest — ⚠ 2 suspicious, 3 subscribers, 1 unhandled`
+
+---
+
+## Security Monitoring
+
+### Suspicious Login Detection
+
+Failed login attempts are logged to the `LoginAttempt` collection. If the same IP fails **twice within 24 hours**, all attempts from that IP are flagged as suspicious.
+
+Each record stores:
+- IP address
+- Email that was attempted
+- User agent string
+- Timestamp
+
+### Admin Dashboard Alerts
+
+Flagged attempts appear on the admin dashboard in a red-highlighted section. Each entry has an **Ignore** button — this dismisses it from the dashboard view while keeping the record in the database for audit purposes.
+
+### Suspicious attempts are also included in the nightly digest email.
+
+---
+
+## Activity Calendar
+
+A GitHub-style contribution heatmap on the public site, aggregating activity across multiple coding platforms.
+
+### Supported Platforms
+
+| Platform | Env Variable |
+|---|---|
+| GitHub | `GITHUB_USERNAME` + `GITHUB_TOKEN` |
+| GitLab | `GITLAB_USERNAME` |
+| LeetCode | `LEETCODE_USERNAME` |
+| Codeforces | `CODEFORCES_HANDLE` |
+| CodeChef | `CODECHEF_USERNAME` |
+| GeeksForGeeks | `GFG_USERNAME` |
+
+Configure only the platforms you use — unset variables are silently skipped. The calendar shows the last 52 weeks with per-day breakdowns visible on hover/tap.
 
 ---
 
@@ -251,31 +331,6 @@ Cloudinary is used for all image hosting (blog covers, project covers, inline ed
 | `portfolio/projects` | Project cover images |
 | `portfolio/inline` | Inline TipTap editor images |
 
-### Setup
-
-1. Create a free Cloudinary account
-2. Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` in `server/.env`
-3. Add `res.cloudinary.com` to Next.js image domains (already configured in `next.config.ts`)
-
----
-
-## Email Notifications
-
-Uses **Nodemailer** with Gmail SMTP to send emails.
-
-### What Gets Sent
-
-- **New blog published** — all subscribers receive a notification with the post title, excerpt, and link
-- **New project created** — all subscribers receive a notification
-- Each email includes a personalized unsubscribe link
-
-### Gmail Setup
-
-1. Enable 2-Factor Authentication on your Gmail account
-2. Generate an App Password: Google Account > Security > App Passwords
-3. Set `GMAIL_APP_PASSWORD` in `server/.env`
-4. The sender address is hardcoded as `updates.padmanabh@gmail.com` in the server code — change it in `server/src/routes/subscribe.ts` if forking
-
 ---
 
 ## Authentication
@@ -284,15 +339,16 @@ Uses **Nodemailer** with Gmail SMTP to send emails.
 
 1. User submits email + password to `POST /api/auth/login`
 2. Server verifies against bcrypt-hashed password in MongoDB
-3. Server issues a JWT (7-day expiry) as an httpOnly cookie (`pk_auth`)
-4. Next.js middleware (`proxy.ts`) validates the JWT on every `/admin/*` request
-5. Invalid/expired tokens redirect to `/padmanabh-login`
+3. On success: JWT (7-day expiry) issued as an httpOnly cookie (`pk_auth`)
+4. On failure: attempt is logged; 2+ failures from the same IP within 24h → flagged as suspicious
+5. Next.js middleware (`proxy.ts`) validates the JWT on every `/admin/*` request
 
 ### Security
 
 - Passwords hashed with bcryptjs (12 salt rounds)
 - Cookies: httpOnly, secure (in production), sameSite: lax
 - Login rate-limited to 10 attempts per 15 minutes
+- Failed login attempts logged and monitored
 - Helmet for security headers
 - CORS restricted to allowed origins
 
@@ -302,8 +358,6 @@ Uses **Nodemailer** with Gmail SMTP to send emails.
 cd server
 npm run seed:admin
 ```
-
-This reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `server/.env` and upserts the user in MongoDB.
 
 ---
 
@@ -315,6 +369,7 @@ This reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `server/.env` and upserts the
 - **Grayscale images:** Project/blog images use a grayscale CSS filter for visual consistency
 - **Responsive:** Mobile-first Tailwind classes, grid layouts adapt from 1 to 3+ columns
 - **Tailwind CSS 4** with `@theme` directive for custom tokens
+- All dates and times displayed in **IST (Asia/Kolkata)**
 
 ---
 
@@ -339,16 +394,18 @@ npm start
 
 ### Render Free Tier Keep-Alive
 
-The server includes a self-ping mechanism. Render automatically provides `RENDER_EXTERNAL_URL` as an environment variable — the server uses it to ping `/api/health` every 14 minutes, preventing the free-tier instance from spinning down.
+The server self-pings `/api/health` every 14 minutes when `RENDER_EXTERNAL_URL` is set, preventing the free-tier instance from spinning down.
 
 ### Production Checklist
 
 - [ ] Set `NODE_ENV=production`
-- [ ] Set `COOKIE_DOMAIN` to your actual domain (e.g., `.yourdomain.com`)
+- [ ] Set `COOKIE_DOMAIN` to your actual domain (e.g. `.yourdomain.com`)
 - [ ] Set `CORS_ORIGIN` to your frontend URL
-- [ ] Use a strong 32+ character `JWT_SECRET` (same in both frontend and backend)
+- [ ] Use a strong 32+ character `JWT_SECRET` (same in both `.env` files)
 - [ ] Run `npm run seed:admin` to create the admin user
-- [ ] (Optional) Configure Cloudinary and Gmail credentials
+- [ ] Configure `GMAIL_APP_PASSWORD` for email features
+- [ ] (Optional) Configure Cloudinary credentials for image uploads
+- [ ] (Optional) Configure coding platform usernames for the activity calendar
 
 ---
 
@@ -356,26 +413,31 @@ The server includes a self-ping mechanism. Render automatically provides `RENDER
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| `GET` | `/api/health` | No | Health check (used by keep-alive) |
+| `GET` | `/api/health` | No | Health check |
 | `POST` | `/api/auth/login` | No | Admin login |
 | `POST` | `/api/auth/logout` | No | Admin logout |
 | `GET` | `/api/auth/me` | Yes | Get current user |
+| `GET` | `/api/auth/suspicious` | Yes | List suspicious login attempts |
+| `PATCH` | `/api/auth/suspicious/:id/dismiss` | Yes | Dismiss a suspicious attempt |
 | `GET` | `/api/projects` | No | List projects |
 | `GET` | `/api/projects/categories` | No | List project categories |
-| `GET` | `/api/projects/:idOrSlug` | No | Get project by ID or slug |
+| `GET` | `/api/projects/:idOrSlug` | No | Get project |
 | `POST` | `/api/projects` | Yes | Create project |
 | `PUT` | `/api/projects/:id` | Yes | Update project |
 | `DELETE` | `/api/projects/:id` | Yes | Delete project |
-| `GET` | `/api/blogs` | No | List published blogs (`?all=1` for drafts, requires auth) |
-| `GET` | `/api/blogs/:idOrSlug` | No | Get blog by ID or slug |
-| `POST` | `/api/blogs` | Yes | Create blog |
-| `PUT` | `/api/blogs/:id` | Yes | Update blog |
-| `DELETE` | `/api/blogs/:id` | Yes | Delete blog |
+| `GET` | `/api/blogs` | No | List published blogs (`?all=1` for all, requires auth) |
+| `GET` | `/api/blogs/:idOrSlug` | No | Get blog post |
+| `POST` | `/api/blogs` | Yes | Create blog post |
+| `PUT` | `/api/blogs/:id` | Yes | Update blog post |
+| `DELETE` | `/api/blogs/:id` | Yes | Delete blog post |
 | `POST` | `/api/contact` | No | Submit contact form |
-| `GET` | `/api/contact` | Yes | List submissions |
+| `GET` | `/api/contact` | Yes | List contact submissions |
 | `PATCH` | `/api/contact/:id` | Yes | Toggle handled status |
+| `POST` | `/api/contact/:id/reply` | Yes | Send email reply to submission |
 | `DELETE` | `/api/contact/:id` | Yes | Delete submission |
 | `POST` | `/api/subscribe` | No | Subscribe to newsletter |
 | `GET` | `/api/subscribe` | Yes | List subscribers |
 | `DELETE` | `/api/subscribe/:id` | Yes | Delete subscriber |
 | `GET` | `/api/uploads/signature` | Yes | Get Cloudinary upload signature |
+| `GET` | `/api/activity` | No | Get aggregated coding activity (last 52 weeks) |
+| `GET` | `/api/activity/:date` | No | Get per-platform breakdown for a specific date |

@@ -8,8 +8,8 @@ import { sendReply } from "../lib/email.js";
 const router = Router();
 
 const submitLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 5,
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 3,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many submissions — try again later" },

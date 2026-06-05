@@ -8,8 +8,8 @@ import { MAX_SUBSCRIBERS, verifyUnsubscribe } from "../lib/email.js";
 const router = Router();
 
 const subscribeLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 10,
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 2,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests — try again later" },
