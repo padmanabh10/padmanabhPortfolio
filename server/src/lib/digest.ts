@@ -5,7 +5,7 @@ import { LoginAttempt } from "../models/LoginAttempt.js";
 import { env } from "../env.js";
 import { getSiteUrl } from "./email.js";
 
-const FROM = "Padmanabh Portfolio <updates@padmanabhpk.me>";
+const FROM = "Padmanabh Portfolio <noreply@padmanabhpk.me>";
 const DIGEST_TO = env.ADMIN_EMAIL;
 
 function getResend() {

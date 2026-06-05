@@ -6,7 +6,7 @@ import { env } from "../env.js";
 const MAX_SUBSCRIBERS = 49;
 export { MAX_SUBSCRIBERS };
 
-const FROM = "Padmanabh Kulkarni <updates@padmanabhpk.me>";
+const FROM = "Padmanabh Kulkarni <noreply@padmanabhpk.me>";
 
 function getResend() {
   if (!env.RESEND_API_KEY) return null;
