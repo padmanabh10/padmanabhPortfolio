@@ -1,24 +1,21 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { ContactSubmission } from "../models/ContactSubmission.js";
 import { Subscriber } from "../models/Subscriber.js";
 import { LoginAttempt } from "../models/LoginAttempt.js";
 import { env } from "../env.js";
 import { getSiteUrl } from "./email.js";
 
-const GMAIL_USER = "updates.padmanabh@gmail.com";
+const FROM = "Padmanabh Portfolio <updates@padmanabhpk.me>";
 const DIGEST_TO = env.ADMIN_EMAIL;
 
-function getTransporter() {
-  if (!env.GMAIL_APP_PASSWORD) return null;
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: GMAIL_USER, pass: env.GMAIL_APP_PASSWORD },
-  });
+function getResend() {
+  if (!env.RESEND_API_KEY) return null;
+  return new Resend(env.RESEND_API_KEY);
 }
 
 export async function sendDailyDigest(): Promise<void> {
-  const transporter = getTransporter();
-  if (!transporter) return;
+  const resend = getResend();
+  if (!resend) return;
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -72,7 +69,7 @@ export async function sendDailyDigest(): Promise<void> {
   const suspiciousSection = suspiciousAttempts.length > 0 ? `
     <tr><td style="padding-bottom:8px;">
       <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#dc2626;margin:0 0 12px 0;">
-        ⚠ Suspicious Login Attempts Today — ${suspiciousAttempts.length}
+        Suspicious Login Attempts Today — ${suspiciousAttempts.length}
       </p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#fef2f2;border:1px solid #fca5a5;border-radius:8px;overflow:hidden;">
         <tbody>${suspiciousRows}</tbody>
@@ -145,13 +142,15 @@ export async function sendDailyDigest(): Promise<void> {
     unhandledMessages.length > 0 ? `${unhandledMessages.length} unhandled` : "",
   ].filter(Boolean).join(", ");
 
-  await transporter.sendMail({
-    from: `Padmanabh Portfolio <${GMAIL_USER}>`,
+  const { error } = await resend.emails.send({
+    from: FROM,
     to: DIGEST_TO,
     subject: `Daily Digest — ${subjectParts}`,
     text,
     html,
   });
+
+  if (error) throw new Error(`Resend error: ${error.message}`);
 
   console.log(`[digest] Sent — ${suspiciousAttempts.length} suspicious, ${newSubscribers.length} subscribers, ${unhandledMessages.length} unhandled`);
 }

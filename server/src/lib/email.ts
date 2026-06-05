@@ -1,13 +1,21 @@
 import { createHmac } from "crypto";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { Subscriber } from "../models/Subscriber.js";
 import { env } from "../env.js";
 
 const MAX_SUBSCRIBERS = 49;
-
 export { MAX_SUBSCRIBERS };
 
-const GMAIL_USER = "updates.padmanabh@gmail.com";
+const FROM = "Padmanabh Kulkarni <updates@padmanabhpk.me>";
+
+function getResend() {
+  if (!env.RESEND_API_KEY) return null;
+  return new Resend(env.RESEND_API_KEY);
+}
+
+export function getSiteUrl(): string {
+  return env.CORS_ORIGIN.split(",")[0]!.trim();
+}
 
 export function signUnsubscribe(email: string): string {
   return createHmac("sha256", env.JWT_SECRET).update(email).digest("hex");
@@ -15,21 +23,6 @@ export function signUnsubscribe(email: string): string {
 
 export function verifyUnsubscribe(email: string, token: string): boolean {
   return signUnsubscribe(email) === token;
-}
-
-function getTransporter() {
-  if (!env.GMAIL_APP_PASSWORD) return null;
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: GMAIL_USER,
-      pass: env.GMAIL_APP_PASSWORD,
-    },
-  });
-}
-
-export function getSiteUrl(): string {
-  return env.CORS_ORIGIN.split(",")[0]!.trim();
 }
 
 function buildUnsubscribeUrl(email: string): string {
@@ -58,18 +51,13 @@ function buildEmail(
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
             <tbody>
               <tr><td style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#0f7a4f;padding-bottom:10px;">New ${label}</td></tr>
-
               <tr><td style="font-family:'Courier New',Courier,monospace;font-size:20px;line-height:1.3;color:#1f2a23;font-weight:700;padding-bottom:16px;">${title}</td></tr>
-
               <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.75;color:#2b3830;padding-bottom:28px;">${description}</td></tr>
-
               <tr><td style="padding-bottom:30px;">
                 <a href="${url}" style="display:inline-block;background-color:#0f7a4f;color:#ffffff;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:700;letter-spacing:1.5px;text-decoration:none;padding:12px 24px;text-transform:uppercase;border-radius:4px;">Read More →</a>
               </td></tr>
-
               <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.7;color:#2b3830;padding-bottom:4px;">Best regards,</td></tr>
               <tr><td style="font-family:'Courier New',Courier,monospace;font-size:16px;line-height:1.5;color:#0f7a4f;font-weight:700;padding-bottom:8px;">Padmanabh Kulkarni</td></tr>
-
               <tr><td style="font-family:'Courier New',Courier,monospace;">
                 <div style="font-size:13px;line-height:1.5;padding-bottom:4px;">
                   <a href="${siteUrl}" style="color:#0f7a4f;text-decoration:none;font-weight:700;border-bottom:1px solid #9fd0b2;">padmanabhpk.me</a>
@@ -99,8 +87,8 @@ export async function sendReply(
   originalMessage: string,
   replyBody: string
 ): Promise<void> {
-  const transporter = getTransporter();
-  if (!transporter) throw new Error("Email not configured (GMAIL_APP_PASSWORD missing)");
+  const resend = getResend();
+  if (!resend) throw new Error("Email not configured (RESEND_API_KEY missing)");
 
   const siteUrl = getSiteUrl();
 
@@ -118,9 +106,7 @@ export async function sendReply(
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
           <tbody>
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:17px;line-height:1.6;color:#1f2a23;font-weight:700;padding-bottom:18px;">Hi ${toName},</td></tr>
-
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.75;color:#2b3830;padding-bottom:22px;">Thanks for reaching out — here&apos;s my reply to your message.</td></tr>
-
             <tr><td style="padding-bottom:22px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#dcefe1;border-radius:8px;">
                 <tbody><tr>
@@ -129,12 +115,9 @@ export async function sendReply(
                 </tr></tbody>
               </table>
             </td></tr>
-
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.75;color:#2b3830;padding-bottom:30px;white-space:pre-wrap;">${escape(replyBody)}</td></tr>
-
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.7;color:#2b3830;padding-bottom:4px;">Best regards,</td></tr>
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:16px;line-height:1.5;color:#0f7a4f;font-weight:700;padding-bottom:8px;">Padmanabh Kulkarni</td></tr>
-
             <tr><td style="font-family:'Courier New',Courier,monospace;">
               <div style="font-size:13px;line-height:1.5;padding-bottom:4px;">
                 <a href="${siteUrl}" style="color:#0f7a4f;text-decoration:none;font-weight:700;border-bottom:1px solid #9fd0b2;">padmanabhpk.me</a>
@@ -151,15 +134,12 @@ export async function sendReply(
     </table>
   `.trim();
 
-  const messageId = `<reply-${Date.now()}@padmanabhpk.me>`;
-
   const text = [
     `Hi ${toName},`,
     ``,
     `Thanks for reaching out — here's my reply to your message.`,
     ``,
-    `Your message:`,
-    originalMessage,
+    `"${originalMessage}"`,
     ``,
     `---`,
     ``,
@@ -167,21 +147,18 @@ export async function sendReply(
     ``,
     `Best regards,`,
     `Padmanabh Kulkarni`,
-    `${siteUrl}`,
+    siteUrl,
   ].join("\n");
 
-  await transporter.sendMail({
-    from: `Padmanabh Kulkarni <${GMAIL_USER}>`,
+  const { error } = await resend.emails.send({
+    from: FROM,
     to: toEmail,
     subject: `Re: ${originalSubject}`,
-    messageId,
-    headers: {
-      "In-Reply-To": messageId,
-      "References": messageId,
-    },
-    text,
     html,
+    text,
   });
+
+  if (error) throw new Error(`Resend error: ${error.message}`);
 }
 
 export async function notifySubscribers(
@@ -190,8 +167,8 @@ export async function notifySubscribers(
   description: string,
   slug: string
 ): Promise<void> {
-  const transporter = getTransporter();
-  if (!transporter) return;
+  const resend = getResend();
+  if (!resend) return;
 
   try {
     const subscribers = await Subscriber.find({}, "email").lean();
@@ -199,11 +176,13 @@ export async function notifySubscribers(
 
     const sends = subscribers.map((s) => {
       const { subject, html } = buildEmail(type, title, description, slug, s.email);
-      return transporter.sendMail({
-        from: `Padmanabh <${GMAIL_USER}>`,
+      return resend.emails.send({
+        from: FROM,
         to: s.email,
         subject,
         html,
+      }).then(({ error }) => {
+        if (error) console.error(`[email] Failed to send to ${s.email}:`, error.message);
       }).catch((err: unknown) => {
         console.error(`[email] Failed to send to ${s.email}:`, err);
       });

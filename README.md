@@ -2,7 +2,7 @@
 
 A full-stack developer portfolio with a hidden admin panel, blog/project CMS, newsletter system, contact form with email reply, activity calendar, and daily digest with security monitoring.
 
-**Stack:** Next.js 16 + React 19 | Express + MongoDB | Tailwind CSS 4 | TipTap Editor | Cloudinary | Nodemailer | node-cron
+**Stack:** Next.js 16 + React 19 | Express + MongoDB | Tailwind CSS 4 | TipTap Editor | Cloudinary | Resend | node-cron
 
 ---
 
@@ -105,7 +105,7 @@ cd server && npm run dev                # backend  → http://localhost:4000
 | `JWT_SECRET` | Yes | 32+ character secret for signing JWTs |
 | `ADMIN_EMAIL` | Yes | Admin login email — daily digest is sent here |
 | `ADMIN_PASSWORD` | Yes | Admin login password (8+ chars, hashed with bcrypt on seed) |
-| `GMAIL_APP_PASSWORD` | No | Gmail App Password for sending emails (requires 2FA on Gmail) |
+| `RESEND_API_KEY` | No | Resend API key for sending emails (get one at resend.com) |
 | `CLOUDINARY_CLOUD_NAME` | No | Cloudinary cloud name |
 | `CLOUDINARY_API_KEY` | No | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | No | Cloudinary API secret |
@@ -239,7 +239,7 @@ Replies are sent from `updates.padmanabh@gmail.com` with:
 
 ## Email Notifications
 
-Uses **Nodemailer** with Gmail SMTP. All emails share a branded template — green dot-grid background, monospace font, and a consistent signature block.
+Uses **Resend** (HTTPS-based, works on Render free tier). All emails share a branded template — green dot-grid background, monospace font, and a consistent signature block.
 
 ### Emails Sent
 
@@ -250,13 +250,13 @@ Uses **Nodemailer** with Gmail SMTP. All emails share a branded template — gre
 | Admin replies to contact | The contact's email | Quoted original message + reply body |
 | Daily digest (11 PM IST) | `ADMIN_EMAIL` | New subscribers, unhandled messages, suspicious logins |
 
-### Gmail Setup
+### Resend Setup
 
-1. Enable 2-Factor Authentication on your Gmail account
-2. Generate an App Password: Google Account → Security → App Passwords
-3. Set `GMAIL_APP_PASSWORD` in `server/.env`
-
-> **Tip:** Gmail SMTP works but has limited deliverability for transactional mail. For production, consider switching to Resend or Postmark by replacing the transporter in `server/src/lib/email.ts`.
+1. Sign up at [resend.com](https://resend.com) (free tier: 3,000 emails/month)
+2. Add and verify your domain
+3. Create an API key
+4. Set `RESEND_API_KEY=re_xxxxxx` in `server/.env`
+5. Update the `FROM` constant in `server/src/lib/email.ts` to match your verified domain
 
 ---
 
@@ -403,7 +403,7 @@ The server self-pings `/api/health` every 14 minutes when `RENDER_EXTERNAL_URL` 
 - [ ] Set `CORS_ORIGIN` to your frontend URL
 - [ ] Use a strong 32+ character `JWT_SECRET` (same in both `.env` files)
 - [ ] Run `npm run seed:admin` to create the admin user
-- [ ] Configure `GMAIL_APP_PASSWORD` for email features
+- [ ] Configure `RESEND_API_KEY` for email features
 - [ ] (Optional) Configure Cloudinary credentials for image uploads
 - [ ] (Optional) Configure coding platform usernames for the activity calendar
 
