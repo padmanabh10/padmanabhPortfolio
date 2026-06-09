@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import { themes } from "@/lib/themes";
+import { ThemedImage } from "@/components/ThemedImage";
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
@@ -25,12 +26,10 @@ export function ThemeSwitcher() {
         onClick={() => setOpen((v) => !v)}
         aria-label="Switch theme"
         title="Switch theme"
-        className="w-6 h-6 rounded-full border-2 transition-all cursor-pointer hover:scale-110"
-        style={{
-          backgroundColor: "var(--color-primary)",
-          borderColor: "color-mix(in srgb, var(--color-primary) 50%, transparent)",
-        }}
-      />
+        className="w-6 h-6 transition-all cursor-pointer hover:scale-110"
+      >
+        <ThemedImage imageKey="paletteIcon" alt="Switch theme" width={24} height={24} />
+      </button>
 
       {open && (
         <div className="absolute right-0 top-9 bg-bg-card border border-border shadow-xl p-2 w-44 flex flex-col gap-0.5">

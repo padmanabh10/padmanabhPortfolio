@@ -6,6 +6,7 @@ export interface ThemeImages {
   airTransport: string;
   buildings: string;
   favicon: string;
+  paletteIcon: string;
 }
 
 export interface Theme {
@@ -44,6 +45,7 @@ export const themes: Theme[] = [
       airTransport: "/images/air-transport-green.png",
       buildings: "/images/buildings-couple-green.png",
       favicon: "/images/icon-green.png",
+      paletteIcon: "/images/paint-palette-green.png",
     },
   },
   {
@@ -74,6 +76,7 @@ export const themes: Theme[] = [
       airTransport: "/images/air-transport-sky.png",
       buildings: "/images/buildings-couple-sky.png",
       favicon: "/images/icon-sky.png",
+      paletteIcon: "/images/paint-palette-sky.png",
     },
   },
   {
@@ -104,6 +107,7 @@ export const themes: Theme[] = [
       airTransport: "/images/air-transport-rose.png",
       buildings: "/images/buildings-couple-rose.png",
       favicon: "/images/icon-rose.png",
+      paletteIcon: "/images/paint-palette-rose.png",
     },
   },
 ];
