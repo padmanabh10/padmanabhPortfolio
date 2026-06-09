@@ -27,8 +27,8 @@ export function ThemeSwitcher() {
         title="Switch theme"
         className="w-6 h-6 rounded-full border-2 transition-all cursor-pointer hover:scale-110"
         style={{
-          backgroundColor: theme.vars["--color-primary"],
-          borderColor: `${theme.vars["--color-primary"]}80`,
+          backgroundColor: "var(--color-primary)",
+          borderColor: "color-mix(in srgb, var(--color-primary) 50%, transparent)",
         }}
       />
 

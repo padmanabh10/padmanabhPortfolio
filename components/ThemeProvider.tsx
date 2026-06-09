@@ -7,11 +7,13 @@ const STORAGE_KEY = "portfolio-theme";
 
 interface ThemeContextValue {
   theme: Theme;
+  ready: boolean;
   setTheme: (id: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: getThemeById(DEFAULT_THEME_ID),
+  ready: false,
   setTheme: () => {},
 });
 
@@ -20,14 +22,16 @@ export function useTheme() {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeId, setThemeId] = useState<string>(() => {
-    if (typeof window === "undefined") return DEFAULT_THEME_ID;
+  const [themeId, setThemeId] = useState<string>(DEFAULT_THEME_ID);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved && themes.find((t) => t.id === saved)) return saved;
+      if (saved && themes.find((t) => t.id === saved)) setThemeId(saved);
     } catch {}
-    return DEFAULT_THEME_ID;
-  });
+    setReady(true);
+  }, []);
 
   useEffect(() => {
     const theme = getThemeById(themeId);
@@ -64,7 +68,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme: getThemeById(themeId), setTheme }}>
+    <ThemeContext.Provider value={{ theme: getThemeById(themeId), ready, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
