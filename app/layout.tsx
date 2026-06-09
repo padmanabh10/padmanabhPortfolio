@@ -16,8 +16,13 @@ export const metadata: Metadata = {
     default: "Padmanabh Kulkarni",
     template: "%s - Padmanabh Kulkarni",
   },
-  description:
-    "Portfolio of Padmanabh Kulkarni.",
+  description: "Portfolio of Padmanabh Kulkarni.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Padmanabh",
+  },
 };
 
 const themeMap = Object.fromEntries(themes.map((t) => [t.id, t.vars]));
@@ -35,6 +40,7 @@ export default function RootLayout({
     >
       <body className="min-h-full">
         <script dangerouslySetInnerHTML={{ __html: antiFlashScript }} />
+        <script dangerouslySetInnerHTML={{ __html: `if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');` }} />
         <ThemeProvider>
           {children}
         </ThemeProvider>
