@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 type Platform = "github" | "gitlab" | "leetcode" | "codeforces" | "codechef" | "geeksforgeeks";
 
@@ -29,17 +30,13 @@ const PLATFORM_KEYS = Object.keys(PLATFORMS) as Platform[];
 const VERSION_CONTROL: Platform[] = ["github", "gitlab"];
 const PROBLEM_SOLVING: Platform[] = ["leetcode", "codeforces", "codechef", "geeksforgeeks"];
 
-// 5 shades per platform: [empty, low, mid-low, mid-high, high]
-// Index 0 is always the "no activity" background colour.
-const EMPTY = "#D4E8D0";
-
 const SHADES: Record<Platform, [string, string, string, string, string]> = {
-  github:        [EMPTY, "#95C9A5", "#52A870", "#1D7A52", "#006C53"], // primary green
-  gitlab:        [EMPTY, "#fdd9bc", "#fba86a", "#FC6D26", "#c44800"], // orange
-  leetcode:      [EMPTY, "#fde9a8", "#fcc84a", "#F59E0B", "#b57209"], // amber
-  codeforces:    [EMPTY, "#fca5a5", "#f87171", "#ef4444", "#b91c1c"], // red
-  codechef:      [EMPTY, "#bfdbfe", "#60a5fa", "#3B82F6", "#1d4ed8"], // blue
-  geeksforgeeks: [EMPTY, "#a7f3d0", "#34d399", "#10B981", "#065f46"], // emerald
+  github:        ["", "#95C9A5", "#52A870", "#1D7A52", "#006C53"], // primary green
+  gitlab:        ["", "#fdd9bc", "#fba86a", "#FC6D26", "#c44800"], // orange
+  leetcode:      ["", "#fde9a8", "#fcc84a", "#F59E0B", "#b57209"], // amber
+  codeforces:    ["", "#fca5a5", "#f87171", "#ef4444", "#b91c1c"], // red
+  codechef:      ["", "#bfdbfe", "#60a5fa", "#3B82F6", "#1d4ed8"], // blue
+  geeksforgeeks: ["", "#a7f3d0", "#34d399", "#10B981", "#065f46"], // emerald
 };
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -59,10 +56,10 @@ function getLevel(count: number): 0 | 1 | 2 | 3 | 4 {
 }
 
 // Returns a CSS background value - solid colour or diagonal gradient stripe
-function getCellBackground(cell: CellData, active: Set<Platform>): string {
+function getCellBackground(cell: CellData, active: Set<Platform>, emptyColor: string): string {
   const activePlatforms = PLATFORM_KEYS.filter(p => active.has(p) && cell[p] > 0);
 
-  if (activePlatforms.length === 0) return EMPTY;
+  if (activePlatforms.length === 0) return emptyColor;
 
   if (activePlatforms.length === 1) {
     const p = activePlatforms[0];
@@ -206,6 +203,8 @@ function Panel({ cell, active }: { cell: CellData; active: Set<Platform> }) {
 const ALL = new Set(PLATFORM_KEYS);
 
 export default function ActivityCalendar() {
+  const { theme } = useTheme();
+  const emptyColor = theme.vars["--color-surface"];
   const [days, setDays] = useState<DayData[]>([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<Set<Platform>>(new Set(ALL));
@@ -323,7 +322,7 @@ export default function ActivityCalendar() {
                     <div key={wIdx} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
                       {week.map((cell, dIdx) => {
                         if (!cell) return <div key={dIdx} style={{ width: CELL, height: CELL }} />;
-                        const bg = loading ? EMPTY : getCellBackground(cell, active);
+                        const bg = loading ? emptyColor : getCellBackground(cell, active, emptyColor);
                         const isHovered = hoveredCell?.date === cell.date;
                         return (
                           <div

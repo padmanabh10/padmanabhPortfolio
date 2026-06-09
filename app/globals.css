@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   --color-bg: #EBFFE6;
   --color-bg-alt: #E5F9E0;
   --color-bg-card: #EBFFE6;
@@ -54,8 +54,8 @@ html {
 }
 
 body {
-  background: linear-gradient(0deg, #EBFFE6, #EBFFE6), #FFFFFF;
-  color: #0F1F10;
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
 }
 
@@ -95,8 +95,8 @@ body {
 /* Hero grid background */
 .hero-grid-bg {
   background:
-    linear-gradient(180deg, rgba(64, 201, 162, 0.125) 2.5%, rgba(64, 201, 162, 0) 2.5%),
-    linear-gradient(90deg, rgba(64, 201, 162, 0.125) 2.5%, rgba(64, 201, 162, 0) 2.5%);
+    linear-gradient(180deg, var(--color-hero-grid) 2.5%, transparent 2.5%),
+    linear-gradient(90deg, var(--color-hero-grid) 2.5%, transparent 2.5%);
   background-size: 40px 40px;
 }
 
@@ -108,7 +108,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: #EBFFE6;
+  background: var(--color-bg);
   mix-blend-mode: saturation;
   pointer-events: none;
 }
@@ -118,8 +118,8 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #D4E8D0;
+  background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #006C53;
+  background: var(--color-primary);
 }

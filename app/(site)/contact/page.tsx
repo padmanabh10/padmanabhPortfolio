@@ -1,13 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect, type FormEvent } from "react";
 import { api, ApiError } from "@/lib/api";
 import PageHeader from "@/components/PageHeader";
+import { ThemedImage } from "@/components/ThemedImage";
 
-const channels: { label: string; href: string; icon?: string }[] = [
-  { label: "GITHUB", href: "https://github.com/padmanabh10", icon: "/images/github.png" },
-  { label: "LINKEDIN", href: "https://www.linkedin.com/in/padmanabhpk", icon: "/images/linkedin.png" },
+import type { ThemeImages } from "@/lib/themes";
+
+const channels: { label: string; href: string; imageKey?: keyof ThemeImages }[] = [
+  { label: "GITHUB", href: "https://github.com/padmanabh10", imageKey: "github" },
+  { label: "LINKEDIN", href: "https://www.linkedin.com/in/padmanabhpk", imageKey: "linkedin" },
   { label: "PERSONAL BLOG", href: "/blog" },
   { label: "EMAIL ME", href: "mailto:officialpadmanabh@gmail.com" },
 ];
@@ -240,9 +242,9 @@ export default function ContactPage() {
                   className="flex items-center justify-between py-3 group"
                 >
                   <span className="font-mono text-sm font-bold text-text group-hover:text-primary transition-colors flex items-center gap-3">
-                    {ch.icon && (
-                      <Image
-                        src={ch.icon}
+                    {ch.imageKey && (
+                      <ThemedImage
+                        imageKey={ch.imageKey}
                         alt=""
                         width={18}
                         height={18}

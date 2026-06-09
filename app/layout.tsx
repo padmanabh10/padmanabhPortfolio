@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { themes, DEFAULT_THEME_ID } from "@/lib/themes";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
@@ -18,6 +20,9 @@ export const metadata: Metadata = {
     "Portfolio of Padmanabh Kulkarni.",
 };
 
+const themeMap = Object.fromEntries(themes.map((t) => [t.id, t.vars]));
+const antiFlashScript = `(function(){try{var m=${JSON.stringify(themeMap)};var s=localStorage.getItem('portfolio-theme')||'${DEFAULT_THEME_ID}';var v=m[s]||m['${DEFAULT_THEME_ID}'];var r=document.documentElement;for(var k in v)r.style.setProperty(k,v[k]);}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -25,10 +30,14 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
       className={`${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        {children}
+        <script dangerouslySetInnerHTML={{ __html: antiFlashScript }} />
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

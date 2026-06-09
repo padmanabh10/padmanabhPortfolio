@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const INTRO_MS   = 10000;  // intro plane flies right→left behind buildings
 const CYCLE_MS   = 14000;  // one full main animation cycle
@@ -56,6 +57,7 @@ const MAIN_ANIM_CSS  = EXPLOSIONS.map(({ id }) => `
 type Phase = "idle" | "intro" | "main" | "burst" | "reset" | "done";
 
 export default function PlaneExplosion() {
+  const { theme } = useTheme();
   const containerRef   = useRef<HTMLDivElement>(null);
   const timers         = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [phase,        setPhase]        = useState<Phase>("idle");
@@ -168,7 +170,7 @@ export default function PlaneExplosion() {
       {phase === "intro" && (
         <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
           <div className="plane-intro-wrap">
-            <img src="/images/air-transport.png" alt=""
+            <img src={theme.images.airTransport} alt=""
               className="w-9 h-9 object-contain opacity-25"
               style={{ transform: "scaleX(-1) rotate(15deg)" }} />
           </div>
@@ -186,7 +188,7 @@ export default function PlaneExplosion() {
 
       {showMain && (
         <div className="absolute inset-0 z-[15] pointer-events-none">
-          <img src="/images/air-transport.png" alt=""
+          <img src={theme.images.airTransport} alt=""
             className="plane-main absolute w-14 h-14 object-contain"
             style={{ top: "40%", left: 0, marginTop: -28 }} />
           {EXPLOSIONS.map(({ id, left, yOffset }) => (

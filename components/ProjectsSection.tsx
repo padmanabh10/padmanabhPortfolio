@@ -1,8 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/lib/types";
-
-const arrowIcon = "/images/right-arrow.png";
+import { ThemedImage } from "@/components/ThemedImage";
 
 export default function ProjectsSection({
   projects,
@@ -23,7 +24,7 @@ export default function ProjectsSection({
           aria-label="View all projects"
           className="group shrink-0 inline-flex items-center justify-center w-12 h-12 border border-primary text-primary hover:bg-primary hover:text-tag-text transition-colors"
         >
-          <Image src={arrowIcon} alt="→" width={16} height={16} className="transition-transform group-hover:translate-x-1" />
+          <ThemedImage imageKey="rightArrow" alt="→" width={16} height={16} className="transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 

@@ -4,6 +4,7 @@ import AboutIntro from "@/components/AboutIntro";
 import ActivityCalendar from "@/components/ActivityCalendar";
 import PlaneExplosion from "@/components/PlaneExplosion";
 import SurpriseButton from "@/components/SurpriseButton";
+import { ThemedImage } from "@/components/ThemedImage";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -161,9 +162,10 @@ export default function AboutPage() {
         <PlaneExplosion />
         <SectionHeader title="TECH STACK" />
         <div className="relative -mx-4 sm:mx-0">
-          <img
-            src="/images/buildings-couple.png"
+          <ThemedImage
+            imageKey="buildings"
             alt=""
+            fill
             className="sm:hidden absolute inset-0 w-full h-full object-fill opacity-10 pointer-events-none select-none z-[1]"
           />
           <div className="relative z-10 grid grid-cols-2 gap-x-0 gap-y-3 justify-items-center w-3/4 mx-auto sm:w-full sm:flex sm:flex-wrap sm:justify-center">

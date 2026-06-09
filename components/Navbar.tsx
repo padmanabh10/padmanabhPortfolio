@@ -11,6 +11,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
+import { ThemeSwitcher, ThemeSwitcherInline } from "@/components/ThemeSwitcher";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -31,6 +32,7 @@ export default function Navbar() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="relative z-20 flex items-center gap-4">
+            <ThemeSwitcher />
             <NavbarButton href="/contact" variant="primary">
               CONTACT ME
             </NavbarButton>
@@ -40,10 +42,13 @@ export default function Navbar() {
         <MobileNav>
           <MobileNavHeader>
             <NavbarLogo />
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
+            <div className="flex items-center gap-3">
+              <ThemeSwitcher />
+              <MobileNavToggle
+                isOpen={isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              />
+            </div>
           </MobileNavHeader>
 
           <MobileNavMenu
@@ -69,6 +74,7 @@ export default function Navbar() {
               >
                 CONTACT ME
               </NavbarButton>
+              <ThemeSwitcherInline />
             </div>
           </MobileNavMenu>
         </MobileNav>

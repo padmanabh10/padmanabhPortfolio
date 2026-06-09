@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ThemedImage } from "@/components/ThemedImage";
 import React, { useRef, useState } from "react";
 
 interface NavbarProps {
@@ -257,14 +258,14 @@ export const NavbarLogo = () => {
       aria-label="Padmanabh Kulkarni - Home"
       className="relative z-20 mr-4 flex items-center px-2 py-1"
     >
-      <Image
-        src="/images/logo.png"
+      <ThemedImage
+        imageKey="logo"
         alt="Padmanabh Kulkarni"
         width={160}
         height={48}
         priority
         style={{ width: "auto" }}
-        className="h-10 md:h-12 object-contain mix-blend-multiply"
+        className="h-10 md:h-12 object-contain"
       />
     </Link>
   );
