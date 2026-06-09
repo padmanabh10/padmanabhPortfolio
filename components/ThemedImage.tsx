@@ -13,5 +13,5 @@ interface ThemedImageProps extends ImageProps {
 
 export function ThemedImage({ imageKey, alt, ...props }: ThemedImageProps) {
   const { theme } = useTheme();
-  return <Image src={theme.images[imageKey]} alt={alt} unoptimized {...props} />;
+  return <Image src={theme.images[imageKey]} alt={alt} unoptimized suppressHydrationWarning {...props} />;
 }

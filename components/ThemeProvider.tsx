@@ -20,16 +20,14 @@ export function useTheme() {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeId, setThemeId] = useState(DEFAULT_THEME_ID);
-
-  useEffect(() => {
+  const [themeId, setThemeId] = useState<string>(() => {
+    if (typeof window === "undefined") return DEFAULT_THEME_ID;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved && themes.find((t) => t.id === saved)) {
-        setThemeId(saved);
-      }
+      if (saved && themes.find((t) => t.id === saved)) return saved;
     } catch {}
-  }, []);
+    return DEFAULT_THEME_ID;
+  });
 
   useEffect(() => {
     const theme = getThemeById(themeId);
