@@ -86,7 +86,6 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Header */}
       <PageHeader>
         <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl uppercase text-text leading-none">
           GET IN
@@ -100,9 +99,7 @@ export default function ContactPage() {
         </p>
       </PageHeader>
 
-      {/* Main content */}
       <section className="px-4 sm:px-8 md:px-24 pb-16 grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8">
-        {/* Form */}
         <div className="md:col-span-3 bg-bg-card border border-border p-5 sm:p-8">
           <h2 className="font-heading text-2xl uppercase text-text mb-8">
             MESSAGE INTERFACE
@@ -168,7 +165,7 @@ export default function ContactPage() {
 
             {status.kind === "sent" && (
               <p className="font-mono text-xs text-primary border border-primary px-3 py-2">
-                MESSAGE RECEIVED — I&apos;ll get back to you soon.
+                MESSAGE RECEIVED - I&apos;ll get back to you soon.
               </p>
             )}
             {status.kind === "error" && (
@@ -195,9 +192,7 @@ export default function ContactPage() {
           </form>
         </div>
 
-        {/* Sidebar */}
         <div className="md:col-span-2 space-y-6">
-          {/* Location */}
           <div className="bg-bg-card border border-border p-6">
             <h3 className="font-heading text-xl uppercase text-text mb-4">
               AVAILABILITY
@@ -232,7 +227,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Social links */}
           <div className="bg-bg-card border border-border p-6">
             <h3 className="font-heading text-xl uppercase text-text mb-4">
               CONNECT

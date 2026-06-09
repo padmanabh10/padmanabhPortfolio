@@ -12,7 +12,7 @@ const subscribeLimiter = rateLimit({
   max: 2,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: "Too many requests — try again later" },
+  message: { error: "Too many requests - try again later" },
 });
 
 const subscribeSchema = z.object({

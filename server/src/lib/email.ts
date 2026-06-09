@@ -107,7 +107,7 @@ export async function sendReply(
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
           <tbody>
             <tr><td style="font-family:'Courier New',Courier,monospace;font-size:17px;line-height:1.6;color:#1f2a23;font-weight:700;padding-bottom:18px;">Hi ${toName},</td></tr>
-            <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.75;color:#2b3830;padding-bottom:22px;">Thanks for reaching out — here&apos;s my reply to your message.</td></tr>
+            <tr><td style="font-family:'Courier New',Courier,monospace;font-size:15px;line-height:1.75;color:#2b3830;padding-bottom:22px;">Thanks for reaching out - here&apos;s my reply to your message.</td></tr>
             <tr><td style="padding-bottom:22px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#dcefe1;border-radius:8px;">
                 <tbody><tr>
@@ -138,7 +138,7 @@ export async function sendReply(
   const text = [
     `Hi ${toName},`,
     ``,
-    `Thanks for reaching out — here's my reply to your message.`,
+    `Thanks for reaching out - here's my reply to your message.`,
     ``,
     `"${originalMessage}"`,
     ``,

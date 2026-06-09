@@ -9,7 +9,6 @@ export default function HeroSection() {
 
   return (
     <section className="hero-grid-bg relative overflow-hidden border-b border-border-accent px-4 sm:px-8 md:px-24 pt-4 pb-12 md:pb-0">
-      {/* Background flickering grid */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -30,25 +29,21 @@ export default function HeroSection() {
 
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-end md:gap-16">
         <div>
-          {/* Greeting */}
           <p className="font-mono text-base md:text-xl tracking-wider text-text-secondary">
             Hi, I am
           </p>
 
-          {/* Main heading */}
           <h1 className="font-heading text-[2rem] sm:text-6xl md:text-[128px] leading-none uppercase text-primary max-w-5xl -ml-1 mt-4">
             <span className="sm:hidden">PADMANABH KULKARNI</span>
             <span className="hidden sm:inline">PADMANABH<br />KULKARNI</span>
           </h1>
 
-          {/* Subtitle */}
           <p className="font-mono text-base sm:text-lg md:text-2xl leading-7 sm:leading-8 text-text-secondary max-w-2xl mt-4 sm:mt-10">
             A Backend Engineer focused on building scalable systems, designing
             efficient APIs, and developing reliable software for real world
             applications.
           </p>
 
-          {/* About link */}
           <Link
             href="/about"
             className="group inline-flex items-center gap-3 mt-6 sm:mt-8 font-mono text-xs font-bold tracking-widest uppercase text-primary border border-primary px-5 py-3 hover:bg-primary hover:text-tag-text transition-colors"
@@ -56,7 +51,6 @@ export default function HeroSection() {
             KNOW MORE
           </Link>
 
-          {/* Stats */}
           <div className="flex flex-wrap gap-4 mt-6 sm:mt-8 pt-6 sm:pt-8">
             {stats.map((stat) => (
               <div
@@ -74,7 +68,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Portrait — hidden on mobile */}
         <div className="relative hidden md:block md:w-[480px] aspect-[3/4] overflow-hidden">
           <Image
             src="/images/hero-image-removebg-preview.png"

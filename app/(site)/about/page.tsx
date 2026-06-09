@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import AboutIntro from "@/components/AboutIntro";
 import ActivityCalendar from "@/components/ActivityCalendar";
+import PlaneExplosion from "@/components/PlaneExplosion";
+import SurpriseButton from "@/components/SurpriseButton";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -49,7 +51,7 @@ const techs = [
   { name: "Node.js", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
   { name: "NestJS", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg" },
   { name: "Flask", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
-  { name: "SQL", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azuresqldatabase/azuresqldatabase-original.svg" },
+  { name: "SQL", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azuresqldatabase/azuresqldatabase-original.svg", hideOnMobile: true },
   { name: "AWS", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
   { name: "Docker", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
   { name: "Kubernetes", img: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-original.svg" },
@@ -72,8 +74,8 @@ const techs = [
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12">
-      <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap">
+    <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap text-center sm:text-left">
         {title}
       </h2>
       <div className="flex-1 h-0.5 bg-primary/30 hidden md:block" />
@@ -86,7 +88,6 @@ export default function AboutPage() {
     <>
       <AboutIntro />
 
-      {/* Education */}
       <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
         <SectionHeader title="EDUCATION" />
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-border">
@@ -114,7 +115,6 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      {/* Experience */}
       <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border bg-bg-alt">
         <SectionHeader title="EXPERIENCE" />
         <div className="flex flex-col gap-8">
@@ -157,14 +157,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Technical Skills */}
-      <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
+      <section id="tech-stack" className="relative overflow-hidden px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border">
+        <PlaneExplosion />
         <SectionHeader title="TECH STACK" />
-        <div className="flex flex-wrap gap-3">
+        <div className="relative -mx-4 sm:mx-0">
+          <img
+            src="/images/buildings-couple.png"
+            alt=""
+            className="sm:hidden absolute inset-0 w-full h-full object-fill opacity-10 pointer-events-none select-none z-[1]"
+          />
+          <div className="relative z-10 grid grid-cols-2 gap-x-0 gap-y-3 justify-items-center w-3/4 mx-auto sm:w-full sm:flex sm:flex-wrap sm:justify-center">
           {techs.map((tech) => (
             <div
               key={tech.name}
-              className="flex items-center gap-3 bg-bg-card border border-border rounded-lg px-4 py-3 hover:border-primary/50 transition-colors"
+              className={`flex flex-col items-center gap-2 bg-transparent border-0 px-2 py-3 sm:flex-row sm:gap-3 sm:bg-bg-card sm:border sm:border-border sm:rounded-lg sm:px-4 sm:py-3 sm:hover:border-primary/50 transition-colors${'hideOnMobile' in tech && tech.hideOnMobile ? ' hidden sm:flex' : ''}`}
             >
               <img
                 src={tech.img}
@@ -178,10 +184,11 @@ export default function AboutPage() {
               </span>
             </div>
           ))}
+          </div>
         </div>
+        <SurpriseButton />
       </section>
 
-      {/* Activity Calendar */}
       <section className="px-4 sm:px-8 md:px-24 py-12 sm:py-24 border-t border-border bg-bg-alt">
         <SectionHeader title="ACTIVITY" />
         <ActivityCalendar />

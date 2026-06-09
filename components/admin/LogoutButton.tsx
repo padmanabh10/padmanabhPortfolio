@@ -11,7 +11,7 @@ export default function LogoutButton() {
     try {
       await api("/api/auth/logout", { method: "POST" });
     } catch {
-      // ignore — still redirect
+      // ignore - still redirect
     }
     window.location.assign("/padmanabh-login");
   }

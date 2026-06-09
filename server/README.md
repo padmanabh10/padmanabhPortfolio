@@ -14,7 +14,7 @@ npm run dev            # http://localhost:4000
 
 ## Endpoints (step 1)
 
-- `GET  /api/health`        — liveness
-- `POST /api/auth/login`    — `{ email, password }` → sets `pk_auth` httpOnly cookie
-- `POST /api/auth/logout`   — clears cookie
-- `GET  /api/auth/me`       — requires cookie, returns current admin
+- `GET  /api/health`        - liveness
+- `POST /api/auth/login`    - `{ email, password }` → sets `pk_auth` httpOnly cookie
+- `POST /api/auth/logout`   - clears cookie
+- `GET  /api/auth/me`       - requires cookie, returns current admin

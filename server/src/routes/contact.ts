@@ -12,7 +12,7 @@ const submitLimiter = rateLimit({
   max: 3,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: "Too many submissions — try again later" },
+  message: { error: "Too many submissions - try again later" },
 });
 
 const submitSchema = z.object({

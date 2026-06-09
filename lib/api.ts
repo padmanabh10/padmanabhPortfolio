@@ -1,11 +1,11 @@
 import type { BlogPost, Project } from "./types";
 
-// Browser-facing base — empty string means same-origin, and Next's rewrites
+// Browser-facing base - empty string means same-origin, and Next's rewrites
 // in next.config.ts proxy /api/* through to the Express backend. This keeps
 // the auth cookie on the same host as the Next app so middleware can read it.
 export const API_URL = "";
 
-// Server-side base — Server Components fetch directly from Express, bypassing
+// Server-side base - Server Components fetch directly from Express, bypassing
 // the Next rewrite (faster, no extra hop). Set INTERNAL_API_URL in deploy if
 // the backend is reachable at a different host.
 const INTERNAL_API_URL =

@@ -73,7 +73,7 @@ export default function BlogForm({ initial }: Props) {
         />
       </Field>
 
-      <Field label="SLUG" hint="optional — auto-generated from title if blank">
+      <Field label="SLUG" hint="optional - auto-generated from title if blank">
         <input
           value={slug}
           onChange={(e) => setSlug(e.target.value)}

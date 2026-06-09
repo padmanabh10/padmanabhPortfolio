@@ -9,7 +9,6 @@ const INTERNAL_API_URL =
 const AUTH_COOKIE = "pk_auth";
 
 export async function POST() {
-  // Best-effort upstream logout
   await fetch(`${INTERNAL_API_URL}/api/auth/logout`, { method: "POST" }).catch(
     () => null
   );

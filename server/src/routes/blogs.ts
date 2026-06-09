@@ -15,7 +15,7 @@ const publicLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: "Too many requests — try again later" },
+  message: { error: "Too many requests - try again later" },
 });
 
 const upsertSchema = z.object({

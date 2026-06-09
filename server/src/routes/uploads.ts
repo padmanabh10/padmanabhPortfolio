@@ -13,7 +13,7 @@ function ensureConfigured() {
   if (!env.CLOUDINARY_CLOUD_NAME || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
     throw new HttpError(
       500,
-      "Cloudinary not configured — set CLOUDINARY_* env vars in server/.env"
+      "Cloudinary not configured - set CLOUDINARY_* env vars in server/.env"
     );
   }
   cloudinary.config({

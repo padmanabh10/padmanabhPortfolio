@@ -13,7 +13,6 @@ export default function ProjectsSection({
 
   return (
     <section className="bg-bg-alt px-4 sm:px-8 md:px-24 py-12 sm:py-24">
-      {/* Section header */}
       <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
         <h2 className="font-heading text-3xl sm:text-5xl uppercase text-primary whitespace-nowrap">
           FEATURED PROJECTS
@@ -28,9 +27,7 @@ export default function ProjectsSection({
         </Link>
       </div>
 
-      {/* Bento grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
-        {/* Large card — first project */}
         {projects[0] && (
           <Link
             href={`/projects/${projects[0].slug}`}
@@ -90,7 +87,6 @@ export default function ProjectsSection({
           </Link>
         )}
 
-        {/* Small card — second project */}
         {projects[1] && (
           <Link
             href={`/projects/${projects[1].slug}`}
@@ -136,7 +132,6 @@ export default function ProjectsSection({
           </Link>
         )}
 
-        {/* Medium card — third project */}
         {projects[2] && (
           <Link
             href={`/projects/${projects[2].slug}`}

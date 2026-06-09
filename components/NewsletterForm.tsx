@@ -58,7 +58,7 @@ export default function NewsletterForm() {
       </div>
       {status.kind === "sent" && (
         <p className="font-mono text-[10px] text-white/80">
-          SUBSCRIBED — Thanks.
+          SUBSCRIBED - Thanks.
         </p>
       )}
       {status.kind === "error" && (

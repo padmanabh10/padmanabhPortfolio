@@ -30,8 +30,7 @@ function LoginForm() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      // Hard navigation — ensures the browser sends the newly-set pk_auth
-      // cookie on the next request so middleware lets /admin through.
+
       window.location.assign(from);
       return;
     } catch (err) {

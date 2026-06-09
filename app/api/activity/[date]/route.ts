@@ -146,7 +146,6 @@ export async function GET(
 ) {
   const { date } = await params;
 
-  // Basic validation
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return NextResponse.json({ error: 'Invalid date' }, { status: 400 });
   }

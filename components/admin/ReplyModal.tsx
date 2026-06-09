@@ -63,7 +63,6 @@ export default function ReplyModal({ id, toName, toEmail, subject }: Props) {
           style={{ background: "rgba(15,31,16,0.55)" }}
         >
           <div className="w-full max-w-xl bg-[var(--color-bg)] border border-[var(--color-border)] flex flex-col max-h-[90vh]">
-            {/* Header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--color-border)]">
               <span className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)]">
                 COMPOSE REPLY
@@ -77,7 +76,6 @@ export default function ReplyModal({ id, toName, toEmail, subject }: Props) {
             </div>
 
             <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
-              {/* To / Subject */}
               <div className="text-[10px] text-[var(--color-text-muted)] space-y-1">
                 <p>
                   <span className="tracking-wider">TO</span>{" "}
@@ -91,13 +89,11 @@ export default function ReplyModal({ id, toName, toEmail, subject }: Props) {
                 </p>
               </div>
 
-              {/* Fixed opening */}
               <div className="text-sm text-[var(--color-text-secondary)] border-l-2 border-[var(--color-surface)] pl-3 space-y-1 select-none">
                 <p>Hi {toName},</p>
-                <p>Thanks for reaching out — here&apos;s my reply to your message.</p>
+                <p>Thanks for reaching out - here&apos;s my reply to your message.</p>
               </div>
 
-              {/* Editable body */}
               <textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
@@ -106,7 +102,6 @@ export default function ReplyModal({ id, toName, toEmail, subject }: Props) {
                 className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] resize-y outline-none focus:border-[var(--color-primary)] font-mono"
               />
 
-              {/* Fixed closing */}
               <div className="text-sm text-[var(--color-text-secondary)] border-l-2 border-[var(--color-surface)] pl-3 space-y-0.5 select-none">
                 <p>Best regards,</p>
                 <p className="font-bold text-[var(--color-primary)]">Padmanabh Kulkarni.</p>
@@ -124,7 +119,6 @@ export default function ReplyModal({ id, toName, toEmail, subject }: Props) {
               )}
             </div>
 
-            {/* Footer */}
             <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-[var(--color-border)]">
               <button
                 onClick={close}

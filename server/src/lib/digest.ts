@@ -70,7 +70,7 @@ export async function sendDailyDigest(): Promise<void> {
   const suspiciousSection = suspiciousAttempts.length > 0 ? `
     <tr><td style="padding-bottom:8px;">
       <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#dc2626;margin:0 0 12px 0;">
-        Suspicious Login Attempts Today — ${suspiciousAttempts.length}
+        Suspicious Login Attempts Today - ${suspiciousAttempts.length}
       </p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#fef2f2;border:1px solid #fca5a5;border-radius:8px;overflow:hidden;">
         <tbody>${suspiciousRows}</tbody>
@@ -80,7 +80,7 @@ export async function sendDailyDigest(): Promise<void> {
   const subscriberSection = newSubscribers.length > 0 ? `
     <tr><td style="padding-bottom:8px;">
       <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#0f7a4f;margin:0 0 12px 0;">
-        New Subscribers Today — ${newSubscribers.length}
+        New Subscribers Today - ${newSubscribers.length}
       </p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#dcefe1;border-radius:8px;overflow:hidden;">
         <tbody>${subscriberRows}</tbody>
@@ -90,7 +90,7 @@ export async function sendDailyDigest(): Promise<void> {
   const messageSection = unhandledMessages.length > 0 ? `
     <tr><td style="padding-top:${newSubscribers.length > 0 ? "24px" : "0"};padding-bottom:8px;">
       <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:2.5px;color:#0f7a4f;margin:0 0 12px 0;">
-        Unhandled Messages — ${unhandledMessages.length}
+        Unhandled Messages - ${unhandledMessages.length}
       </p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background-color:#dcefe1;border-radius:8px;overflow:hidden;">
         <tbody>${messageRows}</tbody>
@@ -130,9 +130,9 @@ export async function sendDailyDigest(): Promise<void> {
   const text = [
     `Daily Digest`,
     ``,
-    suspiciousAttempts.length > 0 ? `Suspicious Login Attempts (${suspiciousAttempts.length}):\n${suspiciousAttempts.map((a) => `  ${a.ip} — tried "${a.email}" — ${a.userAgent.slice(0, 60)}`).join("\n")}` : "",
+    suspiciousAttempts.length > 0 ? `Suspicious Login Attempts (${suspiciousAttempts.length}):\n${suspiciousAttempts.map((a) => `  ${a.ip} - tried "${a.email}" - ${a.userAgent.slice(0, 60)}`).join("\n")}` : "",
     newSubscribers.length > 0 ? `New Subscribers (${newSubscribers.length}):\n${newSubscribers.map((s) => `  ${s.email}`).join("\n")}` : "",
-    unhandledMessages.length > 0 ? `Unhandled Messages (${unhandledMessages.length}):\n${unhandledMessages.map((m) => `  ${m.name} <${m.email}> — ${m.subject}`).join("\n")}` : "",
+    unhandledMessages.length > 0 ? `Unhandled Messages (${unhandledMessages.length}):\n${unhandledMessages.map((m) => `  ${m.name} <${m.email}> - ${m.subject}`).join("\n")}` : "",
     ``,
     `${siteUrl}/admin`,
   ].filter(Boolean).join("\n\n");
@@ -147,12 +147,12 @@ export async function sendDailyDigest(): Promise<void> {
     from: FROM,
     to: DIGEST_TO,
     bcc: BCC,
-    subject: `Daily Digest — ${subjectParts}`,
+    subject: `Daily Digest - ${subjectParts}`,
     text,
     html,
   });
 
   if (error) throw new Error(`Resend error: ${error.message}`);
 
-  console.log(`[digest] Sent — ${suspiciousAttempts.length} suspicious, ${newSubscribers.length} subscribers, ${unhandledMessages.length} unhandled`);
+  console.log(`[digest] Sent - ${suspiciousAttempts.length} suspicious, ${newSubscribers.length} subscribers, ${unhandledMessages.length} unhandled`);
 }

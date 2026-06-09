@@ -254,7 +254,7 @@ export const NavbarLogo = () => {
   return (
     <Link
       href="/"
-      aria-label="Padmanabh Kulkarni — Home"
+      aria-label="Padmanabh Kulkarni - Home"
       className="relative z-20 mr-4 flex items-center px-2 py-1"
     >
       <Image

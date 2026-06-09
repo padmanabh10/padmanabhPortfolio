@@ -23,7 +23,7 @@ const loginSchema = z.object({
 });
 
 function cookieOptions() {
-  // Omit `domain` on localhost — browsers drop cookies with an explicit
+  // Omit `domain` on localhost - browsers drop cookies with an explicit
   // domain that has no dot. In prod, set COOKIE_DOMAIN to a real domain
   // (e.g. ".pk.dev") so the cookie is shared across api.pk.dev + pk.dev.
   const isLocalhost = env.COOKIE_DOMAIN === "localhost" || env.COOKIE_DOMAIN === "";

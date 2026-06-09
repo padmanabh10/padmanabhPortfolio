@@ -83,7 +83,7 @@ export default function ProjectForm({ initial }: Props) {
 
       <Field
         label="SLUG"
-        hint="optional — auto-generated from title if blank"
+        hint="optional - auto-generated from title if blank"
       >
         <input
           value={slug}

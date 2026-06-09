@@ -136,7 +136,6 @@ async function fetchCodeChef(): Promise<DailyMap> {
   if (!res.ok) return {};
   const html = await res.text();
 
-  // CodeChef embeds heatmap data as a JSON-encoded string in a script variable
   const patterns = [
     /calenderData\s*=\s*"((?:[^"\\]|\\.)*)"/,
     /calenderData\s*=\s*'((?:[^'\\]|\\.)*)'/,

@@ -32,11 +32,11 @@ A full-stack developer portfolio with a hidden admin panel, blog/project CMS, ne
 
 ```
 Frontend (Next.js 16)          Backend (Express)
-├── app/(site)/ — public       ├── routes/auth
-├── app/admin/  — admin CMS    ├── routes/projects
+├── app/(site)/ - public       ├── routes/auth
+├── app/admin/  - admin CMS    ├── routes/projects
 ├── components/                ├── routes/blogs
-├── lib/api.ts  — data layer   ├── routes/uploads (Cloudinary)
-└── proxy.ts    — auth guard   ├── routes/contact
+├── lib/api.ts  - data layer   ├── routes/uploads (Cloudinary)
+└── proxy.ts    - auth guard   ├── routes/contact
                                ├── routes/subscribe
                                ├── lib/email.ts
                                ├── lib/digest.ts
@@ -88,7 +88,7 @@ cd server && npm run dev                # backend  → http://localhost:4000
 |---|---|
 | `NEXT_PUBLIC_API_URL` | Backend URL for client-side requests (default: `http://localhost:4000`) |
 | `INTERNAL_API_URL` | Backend URL for Server Components (bypasses Next.js rewrite, faster) |
-| `JWT_SECRET` | Must match the backend `JWT_SECRET` — used to verify auth tokens in middleware |
+| `JWT_SECRET` | Must match the backend `JWT_SECRET` - used to verify auth tokens in middleware |
 | `GITHUB_USERNAME` | GitHub username for activity calendar |
 | `GITHUB_TOKEN` | GitHub personal access token (for contribution data) |
 | `GITLAB_USERNAME` | GitLab username for activity calendar |
@@ -103,13 +103,13 @@ cd server && npm run dev                # backend  → http://localhost:4000
 |---|---|---|
 | `MONGO_URI` | Yes | MongoDB connection string |
 | `JWT_SECRET` | Yes | 32+ character secret for signing JWTs |
-| `ADMIN_EMAIL` | Yes | Admin login email — daily digest is sent here |
+| `ADMIN_EMAIL` | Yes | Admin login email - daily digest is sent here |
 | `ADMIN_PASSWORD` | Yes | Admin login password (8+ chars, hashed with bcrypt on seed) |
 | `RESEND_API_KEY` | No | Resend API key for sending emails (get one at resend.com) |
 | `CLOUDINARY_CLOUD_NAME` | No | Cloudinary cloud name |
 | `CLOUDINARY_API_KEY` | No | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | No | Cloudinary API secret |
-| `RENDER_EXTERNAL_URL` | No | Render provides this automatically — enables keep-alive self-ping |
+| `RENDER_EXTERNAL_URL` | No | Render provides this automatically - enables keep-alive self-ping |
 | `CORS_ORIGIN` | No | Allowed origins, comma-separated (default: `http://localhost:3000`) |
 | `COOKIE_DOMAIN` | No | Cookie domain (default: `localhost`, use `.yourdomain.com` in prod) |
 | `NODE_ENV` | No | `development` / `production` (default: `development`) |
@@ -132,7 +132,7 @@ The admin panel is a hidden CMS accessible at `/padmanabh-login`. There is no li
 Displays at a glance:
 - Total projects, published/draft blog posts, total subscribers, unread contact submissions
 - Recent unread contact messages
-- Suspicious login attempts (if any) — with IP, email tried, user agent, and an Ignore button
+- Suspicious login attempts (if any) - with IP, email tried, user agent, and an Ignore button
 - Latest projects and blog posts
 
 ### Admin Routes
@@ -161,13 +161,13 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 - **Auto-generated slug** from the title
 - **Tags** for categorization
 - **Read time** field
-- **Draft / Published** status — drafts are only visible in the admin panel
+- **Draft / Published** status - drafts are only visible in the admin panel
 - **HTML sanitization** on the server (sanitize-html) to prevent XSS
 
 ### Public Routes
 
-- `/blog` — lists the featured post + recent 6
-- `/blog/[slug]` — full blog post
+- `/blog` - lists the featured post + recent 6
+- `/blog/[slug]` - full blog post
 
 ---
 
@@ -178,14 +178,14 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 - Same **TipTap editor** as the blog for rich content
 - **Cover image** upload via Cloudinary
 - **Category** field with autocomplete from existing categories
-- **Featured** toggle — featured projects appear on the homepage (max 3)
+- **Featured** toggle - featured projects appear on the homepage (max 3)
 - **Auto-generated slug** from the title
 - **Tags** for categorization
 
 ### Public Routes
 
-- `/projects` — grid of all projects
-- `/projects/[slug]` — project detail page
+- `/projects` - grid of all projects
+- `/projects/[slug]` - project detail page
 
 ---
 
@@ -201,7 +201,7 @@ All `/admin/*` routes are protected by `proxy.ts` middleware that validates the 
 ### Admin Submissions View (`/admin/submissions`)
 
 - Lists all contact messages with sender IP, timestamp, and full message
-- **Reply** — opens a compose modal with a pre-filled branded email template (fixed greeting + editable body + fixed sign-off); sending auto-marks the message as handled
+- **Reply** - opens a compose modal with a pre-filled branded email template (fixed greeting + editable body + fixed sign-off); sending auto-marks the message as handled
 - **Mark Handled / Unhandled** toggle
 - **Delete** message
 - View and manage newsletter subscribers
@@ -239,7 +239,7 @@ Replies are sent from `updates.padmanabh@gmail.com` with:
 
 ## Email Notifications
 
-Uses **Resend** (HTTPS-based, works on Render free tier). All emails share a branded template — green dot-grid background, monospace font, and a consistent signature block.
+Uses **Resend** (HTTPS-based, works on Render free tier). All emails share a branded template - green dot-grid background, monospace font, and a consistent signature block.
 
 ### Emails Sent
 
@@ -266,11 +266,11 @@ Every day at **11:00 PM IST** the server sends a summary email to `ADMIN_EMAIL`.
 
 ### What's Included
 
-- **Suspicious login attempts** — any flagged attempts from that day (IP, email tried, user agent)
-- **New subscribers** — emails that subscribed today
-- **Unhandled contact messages** — all messages not yet marked as handled
+- **Suspicious login attempts** - any flagged attempts from that day (IP, email tried, user agent)
+- **New subscribers** - emails that subscribed today
+- **Unhandled contact messages** - all messages not yet marked as handled
 
-The subject line summarises the counts, e.g.: `Daily Digest — ⚠ 2 suspicious, 3 subscribers, 1 unhandled`
+The subject line summarises the counts, e.g.: `Daily Digest - ⚠ 2 suspicious, 3 subscribers, 1 unhandled`
 
 ---
 
@@ -288,7 +288,7 @@ Each record stores:
 
 ### Admin Dashboard Alerts
 
-Flagged attempts appear on the admin dashboard in a red-highlighted section. Each entry has an **Ignore** button — this dismisses it from the dashboard view while keeping the record in the database for audit purposes.
+Flagged attempts appear on the admin dashboard in a red-highlighted section. Each entry has an **Ignore** button - this dismisses it from the dashboard view while keeping the record in the database for audit purposes.
 
 ### Suspicious attempts are also included in the nightly digest email.
 
@@ -309,7 +309,7 @@ A GitHub-style contribution heatmap on the public site, aggregating activity acr
 | CodeChef | `CODECHEF_USERNAME` |
 | GeeksForGeeks | `GFG_USERNAME` |
 
-Configure only the platforms you use — unset variables are silently skipped. The calendar shows the last 52 weeks with per-day breakdowns visible on hover/tap.
+Configure only the platforms you use - unset variables are silently skipped. The calendar shows the last 52 weeks with per-day breakdowns visible on hover/tap.
 
 ---
 

@@ -58,7 +58,7 @@ function getLevel(count: number): 0 | 1 | 2 | 3 | 4 {
   return 4;
 }
 
-// Returns a CSS background value — solid colour or diagonal gradient stripe
+// Returns a CSS background value - solid colour or diagonal gradient stripe
 function getCellBackground(cell: CellData, active: Set<Platform>): string {
   const activePlatforms = PLATFORM_KEYS.filter(p => active.has(p) && cell[p] > 0);
 
@@ -253,7 +253,6 @@ export default function ActivityCalendar() {
         {loading ? "Loading contributions..." : `${totalCount.toLocaleString()} contributions in the last year`}
       </p>
 
-      {/* Platform filters */}
       <div className="flex flex-wrap gap-2 mb-5">
         <button
           onClick={handleAllClick}
@@ -294,15 +293,11 @@ export default function ActivityCalendar() {
         })}
       </div>
 
-      {/* Calendar + panel */}
       <div className="flex flex-col lg:flex-row gap-6 items-start">
-
-        {/* ── Heatmap ── */}
         <div className="flex-1 min-w-0 w-full">
           <div ref={scrollRef} className="overflow-x-auto pb-1 scrollbar-none">
             <div style={{ display: "flex", alignItems: "flex-start", width: "max-content" }}>
 
-              {/* Day labels */}
               <div style={{ display: "flex", flexDirection: "column", gap: GAP, paddingTop: 18, width: 32, flexShrink: 0 }}>
                 {DAY_LABELS.map((label, i) => (
                   <div key={i} style={{ height: CELL, lineHeight: `${CELL}px`, fontSize: 9, color: "var(--color-text-muted)", textAlign: "right", paddingRight: 4 }}>
@@ -311,7 +306,6 @@ export default function ActivityCalendar() {
                 ))}
               </div>
 
-              {/* Grid */}
               <div style={{ position: "relative" }}>
                 <div style={{ height: 16, position: "relative", marginBottom: GAP }}>
                   {monthLabels.map(({ label, weekIdx }) => (
@@ -356,7 +350,6 @@ export default function ActivityCalendar() {
           </div>
         </div>
 
-        {/* ── Right panel (desktop) ── always reserved so layout never shifts */}
         <div
           className="hidden lg:block w-60 xl:w-64 shrink-0 border border-border-accent bg-bg-card"
           style={{ height: 16 + GAP + 7 * CELL + 6 * GAP }}
@@ -368,7 +361,6 @@ export default function ActivityCalendar() {
         </div>
       </div>
 
-      {/* ── Bottom panel (mobile) ── shown on tap */}
       {hoveredCell && (
         <div className="lg:hidden mt-4 border border-border-accent bg-bg-card">
           <Panel cell={hoveredCell} active={active} />
